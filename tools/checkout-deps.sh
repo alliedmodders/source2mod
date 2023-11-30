@@ -34,7 +34,7 @@ elif [ `uname` != "Linux" ] && [ -n "${COMSPEC:+1}" ]; then
   decomp=unzip
 fi
 
-if [ ! -d "source2mod" -o ! -d "sourcemod" ]; then
+if [ ! -d "source2mod" ]; then
     echo "Could not find a Source2Mod repository; make sure you are running this script in the parent directory."
     exit 1
 fi
