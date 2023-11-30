@@ -34,11 +34,9 @@ elif [ `uname` != "Linux" ] && [ -n "${COMSPEC:+1}" ]; then
   decomp=unzip
 fi
 
-if [ ! -d "sourcemod" ]; then
-  if [ ! -d "sourcemod-1.5" ]; then
-    echo "Could not find a SourceMod repository; make sure you aren't running this script inside it."
+if [ ! -d "source2mod" -o ! -d "sourcemod" ]; then
+    echo "Could not find a Source2Mod repository; make sure you are running this script in the parent directory."
     exit 1
-  fi
 fi
 
 getmysql ()
