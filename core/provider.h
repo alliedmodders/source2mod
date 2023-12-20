@@ -68,27 +68,31 @@ public:
 	void DefineCommand(const char *cmd, const char *help, const SourceMod::CommandFunc &callback) override;
 	void FormatSourceBinaryName(const char *basename, char *buffer, size_t maxlength) override;
 
-	ke::RefPtr<CommandHook> AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
+	void AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
+#ifndef SOURCE2_WIP
 	ke::RefPtr<CommandHook> AddPostCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
+#endif
 
+#ifndef SOURCE2_WIP
 	int CommandClient() const {
 		return hooks_.CommandClient();
 	}
+#endif
 
 private:
 	ke::RefPtr<ke::SharedLib> logic_;
 	LogicInitFunction logic_init_;
+
 	GameHooks hooks_;
 
 	struct CommandImpl : public ke::Refcounted<CommandImpl>
 	{
 	public:
-		CommandImpl(ConCommand *cmd, CommandHook *hook);
+		CommandImpl(ConCommand *cmd);
 		~CommandImpl();
 
 	private:
 		ConCommand *cmd_;
-		ke::RefPtr<CommandHook> hook_;
 	};
 	std::vector<ke::RefPtr<CommandImpl>> commands_;
 };

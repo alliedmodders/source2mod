@@ -39,7 +39,25 @@ class EQueryCvarValueStatus;
 typedef int QueryCvarCookie_t;
 #endif
 
-#if SOURCE_ENGINE >= SE_ORANGEBOX
+#if META_IS_SOURCE2 && SOURCE2_WIP
+	// Currently a stub
+	#define CONVAR_REGISTER(object)				ConVar_Register( FCVAR_GAMEDLL | FCVAR_RELEASE )
+	class ConCommandBase;
+	class ConCommand;
+	
+	inline bool IsFlagSet( ConCommandBase *cmd, int flag )
+	{
+		return false;
+	}
+	inline ConCommandBase *FindCommandBase( const char *name )
+	{
+		return nullptr;
+	}
+	inline ConCommand *FindCommand( const char *name )
+	{
+		return nullptr;
+	}
+#elif SOURCE_ENGINE >= SE_ORANGEBOX
 	#define CONVAR_REGISTER(object)				ConVar_Register(0, object)
 
 	inline bool IsFlagSet(ConCommandBase *cmd, int flag)
@@ -121,7 +139,17 @@ typedef int QueryCvarCookie_t;
 	typedef FnChangeCallback					FnChangeCallback_t;
 #endif //SOURCE_ENGINE >= SE_ORANGEBOX
 
-#if SOURCE_ENGINE >= SE_LEFT4DEAD
+#if META_IS_SOURCE2 && SOURCE2_WIP
+	// Currently a stub
+
+	#define IndexOfEdict(a)
+	#define PEntityOfEntIndex(a)
+
+	inline int GetTypeDescOffs( typedescription_t *td )
+	{
+		return td->fieldOffset;
+	}
+#elif SOURCE_ENGINE >= SE_LEFT4DEAD
 	inline int IndexOfEdict(const edict_t *pEdict)
 	{
 		return (int)(pEdict - gpGlobals->pEdicts);

@@ -112,7 +112,7 @@ class SMConfig(object):
     return ResolveEnvPath('HL2SDK{}'.format(sdk_name.upper()), dir_name)
 
   def shouldIncludeSdk(self, sdk):
-    return not sdk.get('source2', False)
+    return sdk.get('source2', False)
 
   def detectSDKs(self):
     sdk_list = [s for s in builder.options.sdks.split(',') if s]
@@ -214,6 +214,8 @@ class SMConfig(object):
     cxx.defines += [
       'SOURCEMOD_BUILD',
       'SM_USE_VERSIONLIB',
+      'META_IS_SOURCE2',
+      'SOURCE2_WIP'
     ]
     cxx.includes += [
       os.path.join(builder.sourcePath, 'public'),
@@ -515,7 +517,16 @@ class SMConfig(object):
 
     for other_sdk in self.sdk_manifests:
       compiler.defines += ['SE_{}={}'.format(other_sdk['define'], other_sdk['code'])]
-
+    
+    # Win only hack to add mathlib.lib in while it's not in hl2sdk-manifests, remove when added there!!!!
+    if compiler.target.platform == 'windows':
+      compiler.linkflags.append(os.path.join(sdk['path'], 'lib', 'public', 'win64', 'mathlib.lib'))
+    
+    binary.sources += [
+      os.path.join(sdk['path'], 'tier1', 'convar.cpp'),
+      os.path.join(sdk['path'], 'public', 'tier0', 'memoverride.cpp'),
+    ]
+	
     SdkHelpers.configureCxx(context, binary, sdk)
 
     return binary
@@ -642,8 +653,8 @@ else:
     'extensions/mysql/AMBuilder',
     'extensions/pgsql/AMBuilder',
     'extensions/regex/AMBuilder',
-    'extensions/sdkhooks/AMBuilder',
-    'extensions/sdktools/AMBuilder',
+    # 'extensions/sdkhooks/AMBuilder',
+    # 'extensions/sdktools/AMBuilder',
     'extensions/sqlite/AMBuilder',
     'extensions/tf2/AMBuilder',
     'extensions/topmenus/AMBuilder',

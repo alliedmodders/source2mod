@@ -44,7 +44,7 @@ public: //IRecipientFilter
 	bool IsReliable() const;
 	bool IsInitMessage() const;
 	int GetRecipientCount() const;
-	int GetRecipientIndex(int slot) const;
+	CPlayerSlot GetRecipientIndex(int slot) const;
 public:
 	void Initialize(const cell_t *ptr, size_t count);
 	void SetToReliable(bool isreliable);
@@ -79,7 +79,7 @@ inline int CellRecipientFilter::GetRecipientCount() const
 	return m_Size;
 }
 
-inline int CellRecipientFilter::GetRecipientIndex(int slot) const
+inline CPlayerSlot CellRecipientFilter::GetRecipientIndex(int slot) const
 {
 	int ret;
 	if ((slot < 0) || (slot >= GetRecipientCount()))

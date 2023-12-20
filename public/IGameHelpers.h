@@ -43,7 +43,7 @@
 #define SMINTERFACE_GAMEHELPERS_VERSION		11
 
 class CBaseEntity;
-class CBaseHandle;
+class CEntityHandle;
 class SendProp;
 class ServerClass;
 class ICommandLine;
@@ -181,7 +181,7 @@ namespace SourceMod
 		 * @param hndl			CBaseHandle object.
 		 * @return				Edict pointer or NULL on failure.
 		 */
-		virtual edict_t *GetHandleEntity(CBaseHandle &hndl) =0;
+		virtual edict_t *GetHandleEntity(CEntityHandle &hndl) =0;
 
 		/**
 		 * @brief Sets the edict pointer in a CBaseHandle object.
@@ -189,7 +189,7 @@ namespace SourceMod
 		 * @param hndl			CBaseHandle object.
 		 * @param pEnt			Edict pointer.
 		 */
-		virtual void SetHandleEntity(CBaseHandle &hndl, edict_t *pEnt) =0;
+		virtual void SetHandleEntity(CEntityHandle &hndl, edict_t *pEnt) =0;
 
 		/**
 		 * @brief Returns the current map name.

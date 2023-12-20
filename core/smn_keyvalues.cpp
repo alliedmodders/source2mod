@@ -34,7 +34,7 @@
 #include "sourcemod.h"
 #include "sourcemm_api.h"
 #include "sm_stringutil.h"
-#include "HalfLife2.h"
+#include "am-string.h"
 #include <KeyValues.h>
 #include "utlbuffer.h"
 #include "logic_bridge.h"
@@ -60,7 +60,7 @@ public:
 		KeyValueStack *pStk = reinterpret_cast<KeyValueStack *>(object);
 		if (pStk->m_bDeleteOnDestroy)
 		{
-			pStk->pBase->deleteThis();
+			delete pStk->pBase;
 		}
 
 		delete pStk;
@@ -782,7 +782,7 @@ static cell_t smn_KeyValuesToFile(IPluginContext *pCtx, const cell_t *params)
 
 	pCtx->LocalToString(params[2], &path);
 
-	return pStk->pCurRoot.front()->SaveToFile(basefilesystem, path);
+	return pStk->pCurRoot.front()->SaveToFile(filesystem, path);
 }
 
 static cell_t smn_FileToKeyValues(IPluginContext *pCtx, const cell_t *params)
@@ -806,7 +806,11 @@ static cell_t smn_FileToKeyValues(IPluginContext *pCtx, const cell_t *params)
 	pCtx->LocalToString(params[2], &path);
 
 	kv = pStk->pCurRoot.front();
-	return g_HL2.KVLoadFromFile(kv, basefilesystem, path);
+#ifndef SOURCE2_WIP
+	return g_HL2.KVLoadFromFile(kv, filesystem, path);
+#else
+	return 0;
+#endif
 }
 
 static cell_t smn_StringToKeyValues(IPluginContext *pCtx, const cell_t *params)
@@ -910,8 +914,8 @@ static cell_t smn_KvDeleteThis(IPluginContext *pContext, const cell_t *params)
 		if (sub == pValues)
 		{
 			KeyValues *pNext = pValues->GetNextKey();
-			pRoot->RemoveSubKey(pValues);
-			pValues->deleteThis();
+			pRoot->RemoveSubKey(pValues, false, false);
+			delete pValues;
 			if (pNext)
 			{
 				pStk->pCurRoot.push(pNext);
@@ -954,14 +958,14 @@ static cell_t smn_KvDeleteKey(IPluginContext *pContext, const cell_t *params)
 	pContext->LocalToString(params[2], &keyName);
 
 	KeyValues *pRoot = pStk->pCurRoot.front();
-	KeyValues *pValues = pRoot->FindKey(keyName);
+	KeyValues *pValues = pRoot->FindKey(keyName, false);
 	if (!pValues)
 	{
 		return 0;
 	}
 
-	pRoot->RemoveSubKey(pValues);
-	pValues->deleteThis();
+	pRoot->RemoveSubKey(pValues, false, false);
+	delete pValues;
 
 	return 1;
 }
@@ -1045,13 +1049,13 @@ static cell_t smn_GetNameSymbol(IPluginContext *pContext, const cell_t *params)
 
 	pContext->LocalToString(params[2], &key);
 
-	KeyValues *pKv = pStk->pCurRoot.front()->FindKey(key);
+	const KeyValues *pKv = pStk->pCurRoot.front()->FindKey(key);
 	if (!pKv)
 	{
 		return 0;
 	}
 	pContext->LocalToPhysAddr(params[3], &val);
-	*val = pKv->GetNameSymbol();
+	*val = pKv->GetNameSymbol().Get();
 
 	return 1;
 }
@@ -1103,7 +1107,7 @@ static cell_t smn_KvGetSectionSymbol(IPluginContext *pCtx, const cell_t *params)
 	KeyValues *pSection = pStk->pCurRoot.front();
 
 	pCtx->LocalToPhysAddr(params[2], &val);
-	*val = pSection->GetNameSymbol();
+	*val = pSection->GetNameSymbol().Get();
 
 	if (!*val)
 	{
