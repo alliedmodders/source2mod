@@ -69,9 +69,9 @@ Function Get-Repository
     }
 }
 
-if (-not (Test-Path "sourcemod" -PathType Container))
+if (-not (Test-Path "source2mod" -PathType Container))
 {
-    Write-Error "Could not find a SourceMod repository; make sure you aren't running this script inside it."
+    Write-Error "Could not find a Source2Mod repository; make sure you are running this script in the parent directory."
     Exit 1
 }
 
