@@ -518,10 +518,6 @@ class SMConfig(object):
     for other_sdk in self.sdk_manifests:
       compiler.defines += ['SE_{}={}'.format(other_sdk['define'], other_sdk['code'])]
     
-    # Win only hack to add mathlib.lib in while it's not in hl2sdk-manifests, remove when added there!!!!
-    if compiler.target.platform == 'windows':
-      compiler.linkflags.append(os.path.join(sdk['path'], 'lib', 'public', 'win64', 'mathlib.lib'))
-    
     binary.sources += [
       os.path.join(sdk['path'], 'tier1', 'convar.cpp'),
       os.path.join(sdk['path'], 'public', 'tier0', 'memoverride.cpp'),
