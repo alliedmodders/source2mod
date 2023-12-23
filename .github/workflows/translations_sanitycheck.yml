@@ -2,12 +2,12 @@ name: Sanity check translation phrases
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'translations/**'
   pull_request:
     branches:
-     - master
+     - main
     paths:
       - 'translations/**'
   workflow_dispatch:
@@ -18,12 +18,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
-        name: Setup Python 3.10
+        name: Setup Python 3.11
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Check translation phrases syntax
         working-directory: tools/language_check
         run: |
-          python ./sanity_check.py 
+          python ./sanity_check.py
 
