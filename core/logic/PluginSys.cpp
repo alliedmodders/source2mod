@@ -351,7 +351,9 @@ bool CPlugin::OnPluginStart()
 		return false;
 	m_status = Plugin_Running;
 
+#ifndef SOURCE2_WIP
 	SyncMaxClients(playerhelpers->GetMaxClients());
+#endif
 
 	cell_t result;
 	IPluginFunction *pFunction = m_pRuntime->GetFunctionByName("OnPluginStart");

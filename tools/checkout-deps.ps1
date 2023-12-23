@@ -7,30 +7,10 @@
 
 [CmdletBinding()]
 param(
+    [Parameter()]
     [string[]]$SDKs = @(
-        'csgo',
-        'hl2dm',
-        'nucleardawn',
-        'l4d2',
-        'dods',
-        'l4d',
-        'css',
-        'tf2',
-        'insurgency',
-        'sdk2013',
-        'dota',
-        'orangebox',
-        'blade',
-        'episode1',
-        'bms',
-        'darkm',
-        'swarm',
-        'bgt',
-        'eye',
-        'contagion',
-        'doi',
-        'pvkii'
-        )
+        'cs2'
+    )
 )
 
 Function Get-Repository
@@ -75,7 +55,7 @@ if (-not (Test-Path "source2mod" -PathType Container))
     Exit 1
 }
 
-Get-Repository -Name "mmsource-1.12" -Branch "master" -Repo "https://github.com/alliedmodders/metamod-source.git"
+Get-Repository -Name "mmsource-2.0" -Branch "master" -Repo "https://github.com/alliedmodders/metamod-source.git"
 
 if (-not (Test-Path "hl2sdk-proxy-repo" -PathType Container))
 {

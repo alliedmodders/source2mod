@@ -1,8 +1,8 @@
 name: SourcePawn scripting
-on: 
+on:
   push:
     branches:
-      - master
+      - main
       - '[0-9]+.[0-9]+-dev'
     paths:
       - 'plugins/include/*'
@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     env:
-      ARCH: x86,x86_64
+      ARCH: x86_64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,9 +33,9 @@ jobs:
 
       # Setup Python for AMBuild
       - uses: actions/setup-python@v5
-        name: Setup Python 3.8
+        name: Setup Python 3.11
         with:
-          python-version: 3.8
+          python-version: 3.11
       - name: Install AMBuild
         run: |
           python -m pip install --upgrade pip setuptools wheel
@@ -48,12 +48,11 @@ jobs:
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')
         run: |
-          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             gcc-multilib g++-multilib libstdc++6 lib32stdc++6 \
-            libc6-dev libc6-dev-i386 linux-libc-dev \
-            linux-libc-dev:i386 lib32z1-dev ${{ matrix.compiler_cc }}
+            libc6-dev linux-libc-dev \
+            clang clang++
 
       - name: Select clang compiler
         if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
@@ -75,5 +74,5 @@ jobs:
       - name: Archive tooling
         uses: actions/upload-artifact@v4
         with:
-          name: sourcemod-tooling-${{ env.SM_VERSION }}-${{ matrix.os_short }}
+          name: source2mod-tooling-${{ env.SM_VERSION }}-${{ matrix.os_short }}
           path: build/package

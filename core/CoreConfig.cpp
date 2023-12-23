@@ -48,10 +48,12 @@
 
 using namespace SourceHook;
 
+#ifndef SOURCE2_WIP
 #ifdef PLATFORM_WINDOWS
 ConVar sm_corecfgfile("sm_corecfgfile", "addons\\sourcemod\\configs\\core.cfg", 0, "SourceMod core configuration file");
 #elif defined PLATFORM_LINUX || defined PLATFORM_APPLE
 ConVar sm_corecfgfile("sm_corecfgfile", "addons/sourcemod/configs/core.cfg", 0, "SourceMod core configuration file");
+#endif
 #endif
 
 IForward *g_pOnServerCfg = NULL;
@@ -63,10 +65,13 @@ bool g_bServerExecd = false;
 bool g_bGotServerStart = false;
 bool g_bGotTrigger = false;
 ConCommand *g_pExecPtr = NULL;
+#ifndef SOURCE2_WIP
 ConVar *g_ServerCfgFile = NULL;
+#endif
 
 void CheckAndFinalizeConfigs();
 
+#ifndef SOURCE2_WIP
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 SH_DECL_EXTERN1_void(ConCommand, Dispatch, SH_NOATTRIB, false, const CCommand &);
 void Hook_ExecDispatchPre(const CCommand &cmd)
@@ -86,6 +91,7 @@ void Hook_ExecDispatchPre()
 		g_bGotTrigger = true;
 	}
 }
+#endif
 
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 void Hook_ExecDispatchPost(const CCommand &cmd)
@@ -103,10 +109,12 @@ void Hook_ExecDispatchPost()
 
 void CheckAndFinalizeConfigs()
 {
+#ifndef SOURCE2_WIP
 	if ((g_bServerExecd || g_ServerCfgFile == NULL) && g_bGotServerStart)
 	{
         g_PendingInternalPush = true;
 	}
+#endif
 }
 
 void CoreConfig::OnSourceModAllInitialized()
@@ -134,8 +142,10 @@ void CoreConfig::OnSourceModShutdown()
 
 	if (g_pExecPtr != NULL)
 	{
+#ifndef SOURCE2_WIP
 		SH_REMOVE_HOOK(ConCommand, Dispatch, g_pExecPtr, SH_STATIC(Hook_ExecDispatchPre), false);
 		SH_REMOVE_HOOK(ConCommand, Dispatch, g_pExecPtr, SH_STATIC(Hook_ExecDispatchPost), true);
+#endif
 		g_pExecPtr = NULL;
 	}
 }
@@ -146,6 +156,7 @@ void CoreConfig::OnSourceModLevelChange(const char *mapName)
 
 	if (!already_checked)
 	{
+#ifndef SOURCE2_WIP
 		if (engine->IsDedicatedServer())
 		{
 			g_ServerCfgFile = icvar->FindVar("servercfgfile");
@@ -168,6 +179,7 @@ void CoreConfig::OnSourceModLevelChange(const char *mapName)
 				g_ServerCfgFile = NULL;
 			}
 		}
+#endif
 		already_checked = true;
 	}
 
@@ -223,8 +235,12 @@ void CoreConfig::Initialize()
 	SMCError err;
 	char filePath[PLATFORM_MAX_PATH];
 
+#ifndef SOURCE2_WIP
 	/* Try to get command line value of core config convar */
 	const char *corecfg = icvar->GetCommandLineValue("sm_corecfgfile");
+#else
+	const char *corecfg = "addons\\sourcemod\\configs\\core.cfg";
+#endif
 
 	/* If sm_corecfgfile is on the command line, use that
 	 * If sm_corecfgfile isn't there, check sm_basepath on the command line and build the path off that
@@ -236,6 +252,7 @@ void CoreConfig::Initialize()
 	}
 	else
 	{
+#ifndef SOURCE2_WIP
 		const char *basepath = icvar->GetCommandLineValue("sm_basepath");
 
 		/* Format path to config file */
@@ -247,6 +264,7 @@ void CoreConfig::Initialize()
 		{
 			ke::path::Format(filePath, sizeof(filePath), "%s/%s", g_SourceMod.GetGamePath(), sm_corecfgfile.GetDefault());
 		}
+#endif
 	}
 
 	/* Reset cached key values */
@@ -320,6 +338,8 @@ inline bool IsPathSepChar(char c)
 
 bool SM_ExecuteConfig(IPlugin *pl, AutoConfig *cfg, bool can_create)
 {
+#ifndef SOURCE2_WIP
+
 	bool will_create = false;
 	
 	/* See if we should be creating */
@@ -479,6 +499,10 @@ bool SM_ExecuteConfig(IPlugin *pl, AutoConfig *cfg, bool can_create)
 	}
 
 	return can_create;
+
+#else
+	return false;
+#endif
 }
 
 void SM_DoSingleExecFwds(IPluginContext *ctx)

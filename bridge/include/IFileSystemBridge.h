@@ -28,7 +28,17 @@
 #define _INCLUDE_SOURCEMOD_BRIDGE_IFILESYSTEM_H_
 
 typedef void * FileHandle_t;
-typedef int FileFindHandle_t; 
+
+// An ugly hack to prevent redeclaration if the hl2sdk include is available,
+// previously it wasn't an issue as it wasn't a struct
+#if !defined FILESYSTEM_H
+class IFileSystem;
+struct FileFindHandle_t
+{
+	IFileSystem *m_pFileSystem;
+	intptr_t m_nFindDataIndex;
+};
+#endif
 
 namespace SourceMod {
 

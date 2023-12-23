@@ -31,17 +31,17 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <eiface.h>
-#include <iserverplugin.h>
+#include <map>
 #include <amtl/am-refcounting.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-function.h>
 
 class ConVar;
 class CCommand;
-struct CCommandContext;
+class CCommandContext;
 
 #if SOURCE_ENGINE >= SE_ORANGEBOX
-# define DISPATCH_ARGS      const CCommand &command
+# define DISPATCH_ARGS      const CCommandContext &context, const CCommand &command
 # define DISPATCH_PROLOGUE
 #else
 # define DISPATCH_ARGS
@@ -72,7 +72,9 @@ public:
 	void Zap();
 
 private:
+#ifndef SOURCE2_WIP
 	int hook_id_;
+#endif
 	Callback callback_;
 };
 
@@ -84,20 +86,26 @@ public:
 	void Start();
 	void Shutdown();
 	void OnVSPReceived();
-
+	
 	ClientCvarQueryMode GetClientCvarQueryMode() const {
 		return client_cvar_query_mode_;
 	}
 
 public:
-	ke::RefPtr<CommandHook> AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
+	void AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
+
+#ifndef SOURCE2_WIP
 	ke::RefPtr<CommandHook> AddPostCommandHook(ConCommand *cmd, const CommandHook::Callback &callback);
 
 	int CommandClient() const {
 		return last_command_client_;
 	}
+#endif
 
 private:
+	void OnDispatchConCommand(ConCommandHandle handle, const CCommandContext &context, const CCommand &command);
+
+#ifndef SOURCE2_WIP
 	// Static callback that Valve's ConVar object executes when the convar's value changes.
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 	static void OnConVarChanged(ConVar *pConVar, const char *oldValue, float flOldValue);
@@ -112,6 +120,7 @@ private:
 #endif
 
 	void SetCommandClient(int client);
+#endif
 
 private:
 	class HookList : public std::vector<int>
@@ -124,8 +133,13 @@ private:
 	};
 	HookList hooks_;
 
-	ClientCvarQueryMode client_cvar_query_mode_;
+	typedef ke::Function<bool( int, const ICommandArgs * )> Callback;
+	std::map<uint16, Callback> registered_commands_;
+
+#ifndef SOURCE2_WIP
 	int last_command_client_;
+#endif
+	ClientCvarQueryMode client_cvar_query_mode_;
 };
 
 } // namespace SourceMod

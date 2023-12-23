@@ -40,7 +40,6 @@
 #include <Logger.h>
 #include <amtl/os/am-shared-library.h>
 #include "logic_bridge.h"
-#include <tier0/mem.h>
 #include <bridge/include/ILogger.h>
 
 #if SOURCE_ENGINE == SE_CSGO

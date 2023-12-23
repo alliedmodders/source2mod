@@ -29,6 +29,8 @@
  * Version: $Id$
  */
 
+
+
 #ifndef _INCLUDE_SOURCEMOD_CHALFLIFE2_H_
 #define _INCLUDE_SOURCEMOD_CHALFLIFE2_H_
 
@@ -46,7 +48,6 @@
 #include <KeyValues.h>
 #include <server_class.h>
 #include <datamap.h>
-#include <ihandleentity.h>
 #include <tier0/icommandline.h>
 #include <string_t.h>
 
@@ -86,6 +87,8 @@ using namespace SourceMod;
 
 #define FORMAT_SOURCE_BIN_NAME(basename) \
 	(SOURCE_BIN_PREFIX basename SOURCE_BIN_SUFFIX SOURCE_BIN_EXT)
+
+#ifndef SOURCE2_WIP
 
 struct DataTableInfo
 {
@@ -313,5 +316,7 @@ public:
 		g_HL2.PopCommandStack();
 	}
 };
+
+#endif
 
 #endif //_INCLUDE_SOURCEMOD_CHALFLIFE2_H_

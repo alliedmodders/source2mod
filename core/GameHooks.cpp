@@ -26,10 +26,17 @@
 // or <http://www.sourcemod.net/license.php>.
 #include "GameHooks.h"
 #include "sourcemod.h"
+
+#ifndef SOURCE2_WIP
 #include "ConVarManager.h"
+#endif
+
 #include "command_args.h"
 #include "provider.h"
 
+SH_DECL_HOOK3_void( ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandHandle, const CCommandContext &, const CCommand & );
+
+#ifndef SOURCE2_WIP
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 SH_DECL_HOOK3_void(ICvar, CallGlobalChangeCallbacks, SH_NOATTRIB, false, ConVar *, const char *, float);
 #else
@@ -48,15 +55,21 @@ SH_DECL_HOOK0_void(ConCommand, Dispatch, SH_NOATTRIB, false);
 #endif
 
 SH_DECL_HOOK1_void(IServerGameClients, SetCommandClient, SH_NOATTRIB, false, int);
+#endif
 
 GameHooks::GameHooks()
-	: client_cvar_query_mode_(ClientCvarQueryMode::Unavailable),
-	  last_command_client_(-1)
+	: client_cvar_query_mode_(ClientCvarQueryMode::Unavailable)
+#ifndef SOURCE2_WIP
+	  , last_command_client_(-1)
+#endif
 {
 }
 
 void GameHooks::Start()
 {
+	hooks_ += SH_ADD_HOOK( ICvar, DispatchConCommand, icvar, SH_MEMBER( this, &GameHooks::OnDispatchConCommand ), false );
+
+#ifndef SOURCE2_WIP
 	// Hook ICvar::CallGlobalChangeCallbacks.
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 	hooks_ += SH_ADD_HOOK(ICvar, CallGlobalChangeCallbacks, icvar, SH_STATIC(OnConVarChanged), false);
@@ -73,6 +86,7 @@ void GameHooks::Start()
 #endif
 
 	hooks_ += SH_ADD_HOOK(IServerGameClients, SetCommandClient, serverClients, SH_MEMBER(this, &GameHooks::SetCommandClient), false);
+#endif
 }
 
 void GameHooks::OnVSPReceived()
@@ -83,9 +97,11 @@ void GameHooks::OnVSPReceived()
 	if (g_SMAPI->GetSourceEngineBuild() == SOURCE_ENGINE_ORIGINAL || vsp_version < 2)
 		return;
 
+#ifndef SOURCE2_WIP
 #if SOURCE_ENGINE != SE_DARKMESSIAH
 	hooks_ += SH_ADD_HOOK(IServerPluginCallbacks, OnQueryCvarValueFinished, vsp_interface, SH_MEMBER(this, &GameHooks::OnQueryCvarValueFinished), false);
 	client_cvar_query_mode_ = ClientCvarQueryMode::VSP;
+#endif
 #endif
 }
 
@@ -98,6 +114,22 @@ void GameHooks::Shutdown()
 	client_cvar_query_mode_ = ClientCvarQueryMode::Unavailable;
 }
 
+void GameHooks::OnDispatchConCommand( ConCommandHandle hndl, const CCommandContext &ctx, const CCommand &args_ )
+{
+	auto regcmd = registered_commands_.find(hndl.Get());
+
+	if(regcmd != registered_commands_.end())
+	{
+		EngineArgs args( args_ );
+
+		bool rval = regcmd->second( ctx.GetPlayerSlot().Get(), &args );
+
+		if(rval)
+			RETURN_META( MRES_SUPERCEDE );
+	}
+}
+
+#ifndef SOURCE2_WIP
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 void GameHooks::OnConVarChanged(ConVar *pConVar, const char *oldValue, float flOldValue)
 #else
@@ -122,35 +154,47 @@ void GameHooks::OnQueryCvarValueFinished(QueryCvarCookie_t cookie, edict_t *pPla
 	g_ConVarManager.OnClientQueryFinished(cookie, client, result, cvarName, cvarValue);
 }
 #endif
+#endif
 
-ke::RefPtr<CommandHook>
-GameHooks::AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
+void GameHooks::AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
 {
-	return new CommandHook(cmd, callback, false);
+	registered_commands_[cmd->GetRef()->handle.Get()] = callback;
 }
 
+#ifndef SOURCE2_WIP
 ke::RefPtr<CommandHook>
 GameHooks::AddPostCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
 {
 	return new CommandHook(cmd, callback, true);
 }
+#endif
 
+#ifndef SOURCE2_WIP
 void GameHooks::SetCommandClient(int client)
 {
 	last_command_client_ = client + 1;
 }
+#endif
 
 CommandHook::CommandHook(ConCommand *cmd, const Callback &callback, bool post)
+#ifndef SOURCE2_WIP
  : hook_id_(0),
    callback_(callback)
+#else
+ : callback_(callback)
+#endif
 {
+#ifndef SOURCE2_WIP
 	hook_id_ = SH_ADD_HOOK(ConCommand, Dispatch, cmd, SH_MEMBER(this, &CommandHook::Dispatch), post);
+#endif
 }
 
 CommandHook::~CommandHook()
 {
+#ifndef SOURCE2_WIP
 	if (hook_id_)
 	  SH_REMOVE_HOOK_ID(hook_id_);
+#endif
 }
 
 void CommandHook::Dispatch(DISPATCH_ARGS)
@@ -159,7 +203,7 @@ void CommandHook::Dispatch(DISPATCH_ARGS)
 	EngineArgs args(command);
 
 	AddRef();
-	bool rval = callback_(sCoreProviderImpl.CommandClient(), &args);
+	bool rval = callback_(context.GetPlayerSlot().Get(), &args);
 	Release();
 	if (rval)
 		RETURN_META(MRES_SUPERCEDE);
@@ -167,5 +211,7 @@ void CommandHook::Dispatch(DISPATCH_ARGS)
 
 void CommandHook::Zap()
 {
+#ifndef SOURCE2_WIP
 	hook_id_ = 0;
+#endif
 }
