@@ -7,10 +7,10 @@ builder.SetBuildFolder('package')
 
 # Add any folders you need to this list
 folder_list = [
-  'addons/sourcemod/extensions',
-  #'addons/sourcemod/scripting/include',
-  #'addons/sourcemod/gamedata',
-  #'addons/sourcemod/configs',
+  'addons/source2mod/extensions',
+  #'addons/source2mod/scripting/include',
+  #'addons/source2mod/gamedata',
+  #'addons/source2mod/configs',
 ]
 
 # Create the distribution folder hierarchy.
@@ -29,19 +29,19 @@ def CopyFiles(src, dest, files):
     builder.AddCopy(source_path, dest_entry)
 
 # Include files 
-#CopyFiles('include', 'addons/sourcemod/scripting/include',
+#CopyFiles('include', 'addons/source2mod/scripting/include',
 #  [ 'sample.inc', ]
 #)
 
 # GameData files
-#CopyFiles('gamedata', 'addons/sourcemod/gamedata',
+#CopyFiles('gamedata', 'addons/source2mod/gamedata',
 #  [ 'myfile.txt',
 #  'file2.txt'
 #  ]
 #)
 
 # Config Files
-#CopyFiles('configs', 'addons/sourcemod/configs',
+#CopyFiles('configs', 'addons/source2mod/configs',
 #  [ 'configfile.cfg',
 #  'otherconfig.cfg,
 #  ]
@@ -49,4 +49,4 @@ def CopyFiles(src, dest, files):
 
 # Copy binaries.
 for cxx_task in Extension.extensions:
-  builder.AddCopy(cxx_task.binary, folder_map['addons/sourcemod/extensions'])
+  builder.AddCopy(cxx_task.binary, folder_map['addons/source2mod/extensions'])

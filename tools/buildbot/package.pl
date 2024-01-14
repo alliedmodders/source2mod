@@ -43,7 +43,7 @@ unless (-e '../GeoLite2-City_20191217.tar')
     system('wget --no-check-certificate -q -O ../GeoLite2-City_20191217.tar.gz https://sm.alliedmods.net/GeoLite2-City_20191217.tar.gz');
     system('gunzip ../GeoLite2-City_20191217.tar.gz');
     system('tar -C ../ -xf ../GeoLite2-City_20191217.tar');
-    copy('../GeoLite2-City_20191217/GeoLite2-City.mmdb', 'addons/sourcemod/configs/geoip/GeoLite2-City.mmdb');
+    copy('../GeoLite2-City_20191217/GeoLite2-City.mmdb', 'addons/source2mod/configs/geoip/GeoLite2-City.mmdb');
 }
 else
 {
@@ -76,7 +76,7 @@ if (defined $tag)
 }
 
 my ($filename);
-$filename = 'sourcemod-' . $version;
+$filename = 'source2mod-' . $version;
 if ($^O eq "linux")
 {
     $filename .= '.tar.gz';
@@ -93,7 +93,7 @@ else
 my ($tmpfh, $tmpfile) = tempfile();
 print $tmpfh $filename;
 $tmpfh->seek( 0, SEEK_END );
-my $latest = "sourcemod-latest-";
+my $latest = "source2mod-latest-";
 if ($^O eq "darwin") {
 	$latest .= "mac";
 }

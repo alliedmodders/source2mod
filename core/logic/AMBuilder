@@ -2,7 +2,7 @@
 import os
 
 for cxx in builder.targets:
-  binary = SM.Library(builder, cxx, 'sourcemod.logic')
+  binary = SM.Library(builder, cxx, 'source2mod.logic')
   binary.compiler.cxxincludes += [
     builder.sourcePath,
     os.path.join(builder.sourcePath, 'core', 'logic'),

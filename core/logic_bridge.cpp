@@ -286,7 +286,7 @@ public:
 } playerinfo_wrapper;
 
 #ifndef SOURCE2_WIP
-static ConVar sm_show_activity("sm_show_activity", "13", FCVAR_SPONLY, "Activity display setting (see sourcemod.cfg)");
+static ConVar sm_show_activity("sm_show_activity", "13", FCVAR_SPONLY, "Activity display setting (see source2mod.cfg)");
 static ConVar sm_immunity_mode("sm_immunity_mode", "1", FCVAR_SPONLY, "Mode for deciding immunity protection");
 static ConVar sm_datetime_format("sm_datetime_format", "%m/%d/%Y - %H:%M:%S", 0, "Default formatting time rules");
 #endif
@@ -747,7 +747,7 @@ bool CoreProviderImpl::LoadBridge(char *error, size_t maxlength)
 	/* Now it's time to load the logic binary */
 	g_SMAPI->PathFormat(file,
 		sizeof(file),
-		"%s/bin/" PLATFORM_ARCH_FOLDER "sourcemod.logic." PLATFORM_LIB_EXT,
+		"%s/bin/" PLATFORM_ARCH_FOLDER "source2mod.logic." PLATFORM_LIB_EXT,
 		g_SourceMod.GetSourceModPath());
 
 	char myerror[255];

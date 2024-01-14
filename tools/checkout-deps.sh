@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This should be run inside a folder that contains sourcemod, otherwise, it will checkout things into "sm-dependencies".
+# This should be run inside a folder that contains source2mod, otherwise, it will checkout things into "sm-dependencies".
 
 trap "exit" INT
 
@@ -135,7 +135,7 @@ fi
 
 $python_cmd -c "import ambuild2" 2>&1 1>/dev/null
 if [ $? -eq 1 ]; then
-  echo "AMBuild is required to build SourceMod"
+  echo "AMBuild is required to build Source2Mod"
 
   $python_cmd -m pip --version 2>&1 1>/dev/null
   if [ $? -eq 1 ]; then

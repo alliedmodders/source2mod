@@ -33,7 +33,7 @@ def SetArchFlags(compiler):
       compiler.defines += ['WIN64']
 
 SdkHelpers = builder.Eval('hl2sdk-manifests/SdkHelpers.ambuild', {
-    'Project': 'sourcemod'
+    'Project': 'source2mod'
 })
 
 class SMConfig(object):
@@ -549,7 +549,7 @@ class SMConfig(object):
     return binary
 
 if getattr(builder, 'target', None) is not None:
-    sys.stderr.write("Your output folder was configured for AMBuild 2.1, and SourceMod is now\n")
+    sys.stderr.write("Your output folder was configured for AMBuild 2.1, and Source2Mod is now\n")
     sys.stderr.write("configured to use AMBuild 2.2. Please remove your output folder and\n")
     sys.stderr.write("reconfigure to continue.\n")
     os._exit(1)

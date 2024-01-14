@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "Automatic Updater"
-            VALUE "FileDescription", "SourceMod Automatic Updater"
+            VALUE "FileDescription", "Source2Mod Automatic Updater"
             VALUE "FileVersion", SM_VERSION_FILE
-            VALUE "InternalName", "SourceMod Updater Extension"
+            VALUE "InternalName", "Source2Mod Updater Extension"
             VALUE "LegalCopyright", "Copyright (c) 2004-2009, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod Updater Extension"
+            VALUE "ProductName", "Source2Mod Updater Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

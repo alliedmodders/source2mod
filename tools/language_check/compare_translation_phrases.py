@@ -251,7 +251,7 @@ for langid, lang in available_languages.items():
         print(f'Generating report for {lang.name} ({langid})...')
         status = 'Incomplete'
         for filename, problems in reports[langid].items():
-            markdown += f'## [{filename}](https://github.com/alliedmodders/sourcemod/blob/master/translations/{langid}/{filename})\n'
+            markdown += f'## [{filename}](https://github.com/alliedmodders/source2mod/blob/master/translations/{langid}/{filename})\n'
             added_phrase_warning = False
             for report in problems:
                 if report.file_warning:

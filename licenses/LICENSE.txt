@@ -1,8 +1,8 @@
-SOURCEMOD LICENSE INFORMATION
+SOURCE2MOD LICENSE INFORMATION
 VERSION: 2019-9-30
 -----------------------------
 
-SourceMod is licensed under the GNU General Public License, version 3.  
+Source2Mod is licensed under the GNU General Public License, version 3.  
 
 As a special exception, AlliedModders LLC gives you permission to link the code
 of this program (as well as its derivative works) to "Half-Life 2," the "Source 
@@ -12,8 +12,8 @@ Additionally, AlliedModders LLC grants this exception to all derivative works.
 
 As an additional special exception to the GNU General Public License 3.0, 
 AlliedModders LLC permits dual-licensing of DERIVATIVE WORKS ONLY (that is, 
-SourcePawn/SourceMod Plugins and SourceMod Extensions, or any software built 
-from the SourceMod SDK or header files) under the GNU General Public License 
+SourcePawn/Source2Mod Plugins and Source2Mod Extensions, or any software built 
+from the Source2Mod SDK or header files) under the GNU General Public License 
 version 2 "or any higher version."  As such, you may choose for your derivative 
 work(s) to be compatible with the GNU General Public License version 2 as long 
 as it is also compatible with the GNU General Public License version 3, via the 
@@ -30,7 +30,7 @@ A copy of the GNU General Public License 2.0 is available in GPLv2.txt.
 A copy of the GNU General Public License 3.0 is available in GPLv3.txt.
 
 SourcePawn is Copyright (C) 2006-2008 AlliedModders LLC.  All rights reserved.
-SourceMod is Copyright (C) 2006-2008 AlliedModders LLC.  All rights reserved.
+Source2Mod is Copyright (C) 2006-2008 AlliedModders LLC.  All rights reserved.
 Pawn and SMALL are Copyright (C) 1997-2008 ITB CompuPhase.
 Source is Copyright (C) Valve Corporation.
 All trademarks are property of their respective owners in the US and other countries.

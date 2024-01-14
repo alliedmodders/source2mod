@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "SDKHooks Extension"
-            VALUE "FileDescription", "SourceMod SDKHooks Extension"
+            VALUE "FileDescription", "Source2Mod SDKHooks Extension"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "SourceMod SDKHooks Extension"
+            VALUE "InternalName", "Source2Mod SDKHooks Extension"
             VALUE "LegalCopyright", "Copyright (c) 2009-2013, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod SDKHooks Extension"
+            VALUE "ProductName", "Source2Mod SDKHooks Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

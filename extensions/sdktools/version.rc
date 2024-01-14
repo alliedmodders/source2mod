@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "SDKTools Extension"
-            VALUE "FileDescription", "SourceMod SDKTools Extension"
+            VALUE "FileDescription", "Source2Mod SDKTools Extension"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "SourceMod SDKTools Extension"
+            VALUE "InternalName", "Source2Mod SDKTools Extension"
             VALUE "LegalCopyright", "Copyright (c) 2004-2008, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod SDKTools Extension"
+            VALUE "ProductName", "Source2Mod SDKTools Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

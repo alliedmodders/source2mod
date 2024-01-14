@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Downloads dependencies for compiling SourceMod.
+    Downloads dependencies for compiling Source2Mod.
 .PARAMETER SDKs
     List of HL2SDK branch names to downloads.
 #>
@@ -93,7 +93,7 @@ $PYTHON_CMD = $PYTHON_CMD.Source # Convert the result into a string path.
 & $PYTHON_CMD -c 'import ambuild2' 2>&1 1>$NULL
 if ($LastExitCode -eq 1)
 {
-    Write-Host -ForegroundColor Red "AMBuild is required to build SourceMod"
+    Write-Host -ForegroundColor Red "AMBuild is required to build Source2Mod"
 
     # Ensure PIP is installed, otherwise, install it.
     & $PYTHON_CMD -m pip --version 2>&1 1>$NULL # We use PIP's '--version' as it's the least verbose.

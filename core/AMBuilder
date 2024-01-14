@@ -1,7 +1,7 @@
 # vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
 import os
 
-project = builder.LibraryProject('sourcemod')
+project = builder.LibraryProject('source2mod')
 
 project.sources += [
   #'MenuStyle_Valve.cpp',
@@ -56,7 +56,7 @@ for sdk_target in SM.sdk_targets:
   sdk = sdk_target.sdk
   cxx = sdk_target.cxx
 
-  binary_name = 'sourcemod.' + sdk['extension']
+  binary_name = 'source2mod.' + sdk['extension']
   needs_protobuf = sdk['name'] in ['cs2']
 
   binary = SM.HL2Config(project, builder, cxx, binary_name, sdk)
