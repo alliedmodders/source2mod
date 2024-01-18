@@ -84,9 +84,9 @@ SMGlobalClass *SMGlobalClass::head = nullptr;
 
 #ifndef SOURCE2_WIP
 #ifdef PLATFORM_WINDOWS
-ConVar sm_basepath("sm_basepath", "addons\\sourcemod", 0, "SourceMod base path (set via command line)");
+ConVar sm_basepath("sm_basepath", "addons\\source2mod", 0, "Source2Mod base path (set via command line)");
 #elif defined PLATFORM_LINUX || defined PLATFORM_APPLE
-ConVar sm_basepath("sm_basepath", "addons/sourcemod", 0, "SourceMod base path (set via command line)");
+ConVar sm_basepath("sm_basepath", "addons/source2mod", 0, "Source2Mod base path (set via command line)");
 #endif
 #endif
 
@@ -215,7 +215,7 @@ bool SourceModBase::InitializeSourceMod(char *error, size_t maxlength, bool late
 		basepath = sm_basepath.GetDefault();
 	}
 #else
-	const char *basepath = "addons\\sourcemod";
+	const char *basepath = "addons\\source2mod";
 #endif
 
 	ke::path::Format(m_SMBaseDir, sizeof(m_SMBaseDir), "%s/%s", g_BaseDir.c_str(), basepath);
