@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "TopMenus Extension"
-            VALUE "FileDescription", "SourceMod TopMenus Extension"
+            VALUE "FileDescription", "Source2Mod TopMenus Extension"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "SourceMod TopMenus Extension"
+            VALUE "InternalName", "Source2Mod TopMenus Extension"
             VALUE "LegalCopyright", "Copyright (c) 2004-2008, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod TopMenus Extension"
+            VALUE "ProductName", "Source2Mod TopMenus Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

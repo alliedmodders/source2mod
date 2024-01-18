@@ -60,7 +60,7 @@ def output_version_headers():
   if tag != "":
     fullstring += "-{0}".format(tag)
 
-  with open(os.path.join(OutputFolder, 'sourcemod_version_auto.h'), 'w') as fp:
+  with open(os.path.join(OutputFolder, 'source2mod_version_auto.h'), 'w') as fp:
     fp.write("""
 #ifndef _SOURCEMOD_AUTO_VERSION_INFORMATION_H_
 #define _SOURCEMOD_AUTO_VERSION_INFORMATION_H_

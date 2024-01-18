@@ -5,45 +5,45 @@ import re
 builder.SetBuildFolder('package')
 
 folder_list = [
-  'addons/sourcemod',
-  'addons/sourcemod/bin',
-  'addons/sourcemod/plugins',
-  'addons/sourcemod/plugins/disabled',
-  'addons/sourcemod/gamedata',
-  'addons/sourcemod/gamedata/core.games',
-  'addons/sourcemod/gamedata/sdkhooks.games',
-  'addons/sourcemod/gamedata/sdktools.games',
-  'addons/sourcemod/gamedata/sm-cstrike.games',
-  'addons/sourcemod/configs',
-  'addons/sourcemod/configs/geoip',
-  'addons/sourcemod/translations',
-  'addons/sourcemod/logs',
-  'addons/sourcemod/extensions',
-  'addons/sourcemod/data',
-  'addons/sourcemod/configs/sql-init-scripts',
-  'addons/sourcemod/configs/sql-init-scripts/mysql',
-  'addons/sourcemod/configs/sql-init-scripts/pgsql',
-  'addons/sourcemod/configs/sql-init-scripts/sqlite',
-  'addons/sourcemod/scripting',
-  'addons/sourcemod/scripting/include',
-  'addons/sourcemod/scripting/admin-flatfile',
-  'addons/sourcemod/scripting/adminmenu',
-  'addons/sourcemod/scripting/testsuite',
-  'addons/sourcemod/scripting/basecommands',
-  'addons/sourcemod/scripting/basecomm',
-  'addons/sourcemod/scripting/funvotes',
-  'addons/sourcemod/scripting/basevotes',
-  'addons/sourcemod/scripting/basebans',
-  'addons/sourcemod/scripting/funcommands',
-  'addons/sourcemod/scripting/playercommands',
+  'addons/source2mod',
+  'addons/source2mod/bin',
+  'addons/source2mod/plugins',
+  'addons/source2mod/plugins/disabled',
+  'addons/source2mod/gamedata',
+  'addons/source2mod/gamedata/core.games',
+  'addons/source2mod/gamedata/sdkhooks.games',
+  'addons/source2mod/gamedata/sdktools.games',
+  'addons/source2mod/gamedata/sm-cstrike.games',
+  'addons/source2mod/configs',
+  'addons/source2mod/configs/geoip',
+  'addons/source2mod/translations',
+  'addons/source2mod/logs',
+  'addons/source2mod/extensions',
+  'addons/source2mod/data',
+  'addons/source2mod/configs/sql-init-scripts',
+  'addons/source2mod/configs/sql-init-scripts/mysql',
+  'addons/source2mod/configs/sql-init-scripts/pgsql',
+  'addons/source2mod/configs/sql-init-scripts/sqlite',
+  'addons/source2mod/scripting',
+  'addons/source2mod/scripting/include',
+  'addons/source2mod/scripting/admin-flatfile',
+  'addons/source2mod/scripting/adminmenu',
+  'addons/source2mod/scripting/testsuite',
+  'addons/source2mod/scripting/basecommands',
+  'addons/source2mod/scripting/basecomm',
+  'addons/source2mod/scripting/funvotes',
+  'addons/source2mod/scripting/basevotes',
+  'addons/source2mod/scripting/basebans',
+  'addons/source2mod/scripting/funcommands',
+  'addons/source2mod/scripting/playercommands',
   'addons/metamod',
-  'cfg/sourcemod',
+  'cfg/source2mod',
 ]
 
 if 'x86_64' in SM.target_archs:
   folder_list.extend([
-    'addons/sourcemod/bin/x64',
-    'addons/sourcemod/extensions/x64',
+    'addons/source2mod/bin/x64',
+    'addons/source2mod/extensions/x64',
   ])
 
 helpers = SM.package_helpers
@@ -52,27 +52,27 @@ folder_map = helpers.CreateFolders(folder_list)
 
 # Copy binaries.
 for cxx_task in SM.binaries:
-  # mms expects our loader (sourcemod_mm) to exist in /bin/
-  if cxx_task.target.arch == 'x86_64' and not 'sourcemod_mm' in cxx_task.binary.path:
-    builder.AddCopy(cxx_task.binary, folder_map['addons/sourcemod/bin/x64'])
+  # mms expects our loader (source2mod_mm) to exist in /bin/
+  if cxx_task.target.arch == 'x86_64' and not 'source2mod_mm' in cxx_task.binary.path:
+    builder.AddCopy(cxx_task.binary, folder_map['addons/source2mod/bin/x64'])
   else:
-    builder.AddCopy(cxx_task.binary, folder_map['addons/sourcemod/bin'])
+    builder.AddCopy(cxx_task.binary, folder_map['addons/source2mod/bin'])
 for cxx_task in SM.extensions:
   if cxx_task.target.arch == 'x86_64':
-    builder.AddCopy(cxx_task.binary, folder_map['addons/sourcemod/extensions/x64'])
+    builder.AddCopy(cxx_task.binary, folder_map['addons/source2mod/extensions/x64'])
   else:
-    builder.AddCopy(cxx_task.binary, folder_map['addons/sourcemod/extensions'])
+    builder.AddCopy(cxx_task.binary, folder_map['addons/source2mod/extensions'])
 for cxx_task in SM.spvm:
   if cxx_task.target.arch == 'x86':
-    dest_path = os.path.join('addons/sourcemod/bin',
+    dest_path = os.path.join('addons/source2mod/bin',
                              'sourcepawn.jit.x86' + os.path.splitext(cxx_task.binary.path)[1])
     builder.AddCopy(cxx_task.binary, dest_path)
   elif cxx_task.target.arch == 'x86_64':
-    dest_path = os.path.join('addons/sourcemod/bin/x64',
+    dest_path = os.path.join('addons/source2mod/bin/x64',
                              'sourcepawn.vm' + os.path.splitext(cxx_task.binary.path)[1])
     builder.AddCopy(cxx_task.binary, dest_path)
 
-helpers.CopySpcomp('addons/sourcemod/scripting')
+helpers.CopySpcomp('addons/source2mod/scripting')
 
 # Export PDB files. We write to a file in the build folder which is pretty
 # verboten, but it's okay if it's in the root since AMBuild will never try
@@ -96,37 +96,37 @@ disabled_plugins = set([
 for smx_file in SM.smx_files:
   smx_entry = SM.smx_files[smx_file]
   if smx_file in disabled_plugins:
-    builder.AddCopy(smx_entry, folder_map['addons/sourcemod/plugins/disabled'])
+    builder.AddCopy(smx_entry, folder_map['addons/source2mod/plugins/disabled'])
   else:
-    builder.AddCopy(smx_entry, folder_map['addons/sourcemod/plugins'])
+    builder.AddCopy(smx_entry, folder_map['addons/source2mod/plugins'])
 
 # Do all straight-up file copies from the source tree.
-helpers.CopyIncludes('addons/sourcemod/scripting/include')
+helpers.CopyIncludes('addons/source2mod/scripting/include')
 
-helpers.CopyFiles('configs', 'addons/sourcemod/configs')
-helpers.CopyFiles('configs/cfg', 'cfg/sourcemod')
+helpers.CopyFiles('configs', 'addons/source2mod/configs')
+helpers.CopyFiles('configs/cfg', 'cfg/source2mod')
 helpers.CopyFiles('configs/metamod', 'addons/metamod')
-helpers.CopyFiles('configs/sql-init-scripts/mysql', 'addons/sourcemod/configs/sql-init-scripts/mysql')
-helpers.CopyFiles('configs/sql-init-scripts/pgsql', 'addons/sourcemod/configs/sql-init-scripts/pgsql')
-helpers.CopyFiles('configs/sql-init-scripts/sqlite', 'addons/sourcemod/configs/sql-init-scripts/sqlite')
-helpers.CopyFiles('gamedata', 'addons/sourcemod/gamedata')
-helpers.CopyFiles('gamedata/sdkhooks.games', 'addons/sourcemod/gamedata/sdkhooks.games')
-helpers.CopyFiles('gamedata/sdktools.games', 'addons/sourcemod/gamedata/sdktools.games')
-helpers.CopyFiles('gamedata/core.games', 'addons/sourcemod/gamedata/core.games')
-helpers.CopyFiles('gamedata/sm-cstrike.games', 'addons/sourcemod/gamedata/sm-cstrike.games')
-helpers.CopyFiles('plugins', 'addons/sourcemod/scripting', '.sp')
-helpers.CopyFiles('translations', 'addons/sourcemod/translations')
-helpers.CopyFiles('licenses', 'addons/sourcemod')
-helpers.CopyFiles('plugins/admin-flatfile', 'addons/sourcemod/scripting/admin-flatfile')
-helpers.CopyFiles('plugins/adminmenu', 'addons/sourcemod/scripting/adminmenu')
-helpers.CopyFiles('plugins/testsuite', 'addons/sourcemod/scripting/testsuite')
-helpers.CopyFiles('plugins/basecommands', 'addons/sourcemod/scripting/basecommands')
-helpers.CopyFiles('plugins/basecomm', 'addons/sourcemod/scripting/basecomm')
-helpers.CopyFiles('plugins/funvotes', 'addons/sourcemod/scripting/funvotes')
-helpers.CopyFiles('plugins/basevotes', 'addons/sourcemod/scripting/basevotes')
-helpers.CopyFiles('plugins/basebans', 'addons/sourcemod/scripting/basebans')
-helpers.CopyFiles('plugins/funcommands', 'addons/sourcemod/scripting/funcommands')
-helpers.CopyFiles('plugins/playercommands', 'addons/sourcemod/scripting/playercommands')
+helpers.CopyFiles('configs/sql-init-scripts/mysql', 'addons/source2mod/configs/sql-init-scripts/mysql')
+helpers.CopyFiles('configs/sql-init-scripts/pgsql', 'addons/source2mod/configs/sql-init-scripts/pgsql')
+helpers.CopyFiles('configs/sql-init-scripts/sqlite', 'addons/source2mod/configs/sql-init-scripts/sqlite')
+helpers.CopyFiles('gamedata', 'addons/source2mod/gamedata')
+helpers.CopyFiles('gamedata/sdkhooks.games', 'addons/source2mod/gamedata/sdkhooks.games')
+helpers.CopyFiles('gamedata/sdktools.games', 'addons/source2mod/gamedata/sdktools.games')
+helpers.CopyFiles('gamedata/core.games', 'addons/source2mod/gamedata/core.games')
+helpers.CopyFiles('gamedata/sm-cstrike.games', 'addons/source2mod/gamedata/sm-cstrike.games')
+helpers.CopyFiles('plugins', 'addons/source2mod/scripting', '.sp')
+helpers.CopyFiles('translations', 'addons/source2mod/translations')
+helpers.CopyFiles('licenses', 'addons/source2mod')
+helpers.CopyFiles('plugins/admin-flatfile', 'addons/source2mod/scripting/admin-flatfile')
+helpers.CopyFiles('plugins/adminmenu', 'addons/source2mod/scripting/adminmenu')
+helpers.CopyFiles('plugins/testsuite', 'addons/source2mod/scripting/testsuite')
+helpers.CopyFiles('plugins/basecommands', 'addons/source2mod/scripting/basecommands')
+helpers.CopyFiles('plugins/basecomm', 'addons/source2mod/scripting/basecomm')
+helpers.CopyFiles('plugins/funvotes', 'addons/source2mod/scripting/funvotes')
+helpers.CopyFiles('plugins/basevotes', 'addons/source2mod/scripting/basevotes')
+helpers.CopyFiles('plugins/basebans', 'addons/source2mod/scripting/basebans')
+helpers.CopyFiles('plugins/funcommands', 'addons/source2mod/scripting/funcommands')
+helpers.CopyFiles('plugins/playercommands', 'addons/source2mod/scripting/playercommands')
 
 with open(os.path.join(builder.sourcePath, 'configs/languages.cfg'), 'r') as f:
   language_re = re.compile(r'^\s*"([^"]+)"\s+"[^"]+"')
@@ -137,7 +137,7 @@ with open(os.path.join(builder.sourcePath, 'configs/languages.cfg'), 'r') as f:
       lang_code = match.group(1)
       if lang_code in added_languages:
         continue
-      output_path = os.path.join('addons/sourcemod/translations', lang_code)
+      output_path = os.path.join('addons/source2mod/translations', lang_code)
       helpers.CreateFolders([output_path])
       helpers.CopyFiles(os.path.join('translations', lang_code), output_path)
       added_languages.add(lang_code)

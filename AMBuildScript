@@ -33,7 +33,7 @@ def SetArchFlags(compiler):
       compiler.defines += ['WIN64']
 
 SdkHelpers = builder.Eval('hl2sdk-manifests/SdkHelpers.ambuild', {
-    'Project': 'sourcemod'
+    'Project': 'source2mod'
 })
 
 class SMConfig(object):
@@ -112,7 +112,7 @@ class SMConfig(object):
     return ResolveEnvPath('HL2SDK{}'.format(sdk_name.upper()), dir_name)
 
   def shouldIncludeSdk(self, sdk):
-    return not sdk.get('source2', False)
+    return sdk.get('source2', False)
 
   def detectSDKs(self):
     sdk_list = [s for s in builder.options.sdks.split(',') if s]
@@ -214,6 +214,8 @@ class SMConfig(object):
     cxx.defines += [
       'SOURCEMOD_BUILD',
       'SM_USE_VERSIONLIB',
+      'META_IS_SOURCE2',
+      'SOURCE2_WIP'
     ]
     cxx.includes += [
       os.path.join(builder.sourcePath, 'public'),
@@ -515,7 +517,12 @@ class SMConfig(object):
 
     for other_sdk in self.sdk_manifests:
       compiler.defines += ['SE_{}={}'.format(other_sdk['define'], other_sdk['code'])]
-
+    
+    binary.sources += [
+      os.path.join(sdk['path'], 'tier1', 'convar.cpp'),
+      os.path.join(sdk['path'], 'public', 'tier0', 'memoverride.cpp'),
+    ]
+	
     SdkHelpers.configureCxx(context, binary, sdk)
 
     return binary
@@ -542,7 +549,7 @@ class SMConfig(object):
     return binary
 
 if getattr(builder, 'target', None) is not None:
-    sys.stderr.write("Your output folder was configured for AMBuild 2.1, and SourceMod is now\n")
+    sys.stderr.write("Your output folder was configured for AMBuild 2.1, and Source2Mod is now\n")
     sys.stderr.write("configured to use AMBuild 2.2. Please remove your output folder and\n")
     sys.stderr.write("reconfigure to continue.\n")
     os._exit(1)
@@ -642,8 +649,8 @@ else:
     'extensions/mysql/AMBuilder',
     'extensions/pgsql/AMBuilder',
     'extensions/regex/AMBuilder',
-    'extensions/sdkhooks/AMBuilder',
-    'extensions/sdktools/AMBuilder',
+    # 'extensions/sdkhooks/AMBuilder',
+    # 'extensions/sdktools/AMBuilder',
     'extensions/sqlite/AMBuilder',
     'extensions/tf2/AMBuilder',
     'extensions/topmenus/AMBuilder',

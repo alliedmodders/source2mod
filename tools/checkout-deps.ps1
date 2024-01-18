@@ -1,36 +1,16 @@
 ﻿<#
 .SYNOPSIS
-    Downloads dependencies for compiling SourceMod.
+    Downloads dependencies for compiling Source2Mod.
 .PARAMETER SDKs
     List of HL2SDK branch names to downloads.
 #>
 
 [CmdletBinding()]
 param(
+    [Parameter()]
     [string[]]$SDKs = @(
-        'csgo',
-        'hl2dm',
-        'nucleardawn',
-        'l4d2',
-        'dods',
-        'l4d',
-        'css',
-        'tf2',
-        'insurgency',
-        'sdk2013',
-        'dota',
-        'orangebox',
-        'blade',
-        'episode1',
-        'bms',
-        'darkm',
-        'swarm',
-        'bgt',
-        'eye',
-        'contagion',
-        'doi',
-        'pvkii'
-        )
+        'cs2'
+    )
 )
 
 Function Get-Repository
@@ -75,7 +55,7 @@ if (-not (Test-Path "source2mod" -PathType Container))
     Exit 1
 }
 
-Get-Repository -Name "mmsource-1.12" -Branch "master" -Repo "https://github.com/alliedmodders/metamod-source.git"
+Get-Repository -Name "mmsource-2.0" -Branch "master" -Repo "https://github.com/alliedmodders/metamod-source.git"
 
 if (-not (Test-Path "hl2sdk-proxy-repo" -PathType Container))
 {
@@ -113,7 +93,7 @@ $PYTHON_CMD = $PYTHON_CMD.Source # Convert the result into a string path.
 & $PYTHON_CMD -c 'import ambuild2' 2>&1 1>$NULL
 if ($LastExitCode -eq 1)
 {
-    Write-Host -ForegroundColor Red "AMBuild is required to build SourceMod"
+    Write-Host -ForegroundColor Red "AMBuild is required to build Source2Mod"
 
     # Ensure PIP is installed, otherwise, install it.
     & $PYTHON_CMD -m pip --version 2>&1 1>$NULL # We use PIP's '--version' as it's the least verbose.

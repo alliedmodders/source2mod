@@ -29,11 +29,15 @@
  * Version: $Id$
  */
 #include "frame_hooks.h"
+
+#ifndef SOURCE2_WIP
 #include "TimerSys.h"
 #include "HalfLife2.h"
 #include "MenuStyle_Valve.h"
 #include "MenuStyle_Radio.h"
 #include "PlayerManager.h"
+#endif
+
 #include "CoreConfig.h"
 #include <sm_queue.h>
 #include <IThreader.h>
@@ -94,6 +98,7 @@ void RunFrameHooks(bool simulating)
 		}
 	}
 
+#ifndef SOURCE2_WIP
 	/* Frame based hooks */
 	g_HL2.ProcessFakeCliCmdQueue();
 	g_HL2.ProcessDelayedKicks();
@@ -119,4 +124,5 @@ void RunFrameHooks(bool simulating)
 		g_Players.RunAuthChecks();
 		g_LastAuthCheck = curtime;
 	}
+#endif
 }

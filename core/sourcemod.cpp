@@ -36,8 +36,15 @@
 #include "CoreConfig.h"
 #include "Logger.h"
 #include "sm_stringutil.h"
+#include "IForwardSys.h"
+
+#ifndef SOURCE2_WIP
 #include "PlayerManager.h"
 #include "TimerSys.h"
+#endif
+
+#include "compat_wrappers.h"
+
 #include <IGameConfigs.h>
 #include "frame_hooks.h"
 #include "logic_bridge.h"
@@ -49,12 +56,14 @@
 #include <bridge/include/IProviderCallbacks.h>
 #include <bridge/include/ILogger.h>
 
+#ifndef SOURCE2_WIP
 SH_DECL_HOOK6(IServerGameDLL, LevelInit, SH_NOATTRIB, false, bool, const char *, const char *, const char *, const char *, bool, bool);
 SH_DECL_HOOK0_void(IServerGameDLL, LevelShutdown, SH_NOATTRIB, false);
 SH_DECL_HOOK1_void(IServerGameDLL, GameFrame, SH_NOATTRIB, false, bool);
 SH_DECL_HOOK1_void(IServerGameDLL, Think, SH_NOATTRIB, false, bool);
 SH_DECL_HOOK1_void(IVEngineServer, ServerCommand, SH_NOATTRIB, false, const char *);
 SH_DECL_HOOK0(IVEngineServer, GetMapEntitiesString, SH_NOATTRIB, 0, const char *);
+#endif
 
 SourceModBase g_SourceMod;
 
@@ -73,10 +82,12 @@ bool sm_disable_jit = false;
 int jit_metadata_flags = JIT_DEBUG_DELETE_ON_EXIT | JIT_DEBUG_PERF_BASIC;
 SMGlobalClass *SMGlobalClass::head = nullptr;
 
+#ifndef SOURCE2_WIP
 #ifdef PLATFORM_WINDOWS
-ConVar sm_basepath("sm_basepath", "addons\\sourcemod", 0, "SourceMod base path (set via command line)");
+ConVar sm_basepath("sm_basepath", "addons\\source2mod", 0, "Source2Mod base path (set via command line)");
 #elif defined PLATFORM_LINUX || defined PLATFORM_APPLE
-ConVar sm_basepath("sm_basepath", "addons/sourcemod", 0, "SourceMod base path (set via command line)");
+ConVar sm_basepath("sm_basepath", "addons/source2mod", 0, "Source2Mod base path (set via command line)");
+#endif
 #endif
 
 void ShutdownJIT()
@@ -190,7 +201,9 @@ bool SourceModBase::InitializeSourceMod(char *error, size_t maxlength, bool late
 		}
 	}
 
+#ifndef SOURCE2_WIP
 	const char *basepath = icvar->GetCommandLineValue("sm_basepath");
+
 	/* Set a custom base path if there is one. */
 	if (basepath != NULL && basepath[0] != '\0')
 	{
@@ -201,6 +214,9 @@ bool SourceModBase::InitializeSourceMod(char *error, size_t maxlength, bool late
 	{
 		basepath = sm_basepath.GetDefault();
 	}
+#else
+	const char *basepath = "addons\\source2mod";
+#endif
 
 	ke::path::Format(m_SMBaseDir, sizeof(m_SMBaseDir), "%s/%s", g_BaseDir.c_str(), basepath);
 	ke::path::Format(m_SMRelDir, sizeof(m_SMRelDir), "%s", basepath);
@@ -277,9 +293,11 @@ bool SourceModBase::InitializeSourceMod(char *error, size_t maxlength, bool late
 
 	sSourceModInitialized = true;
 
+#ifndef SOURCE2_WIP
 	/* Hook this now so we can detect startup without calling StartSourceMod() */
 	SH_ADD_HOOK(IServerGameDLL, LevelInit, gamedll, SH_MEMBER(this, &SourceModBase::LevelInit), false);
 	SH_ADD_HOOK(IVEngineServer, GetMapEntitiesString, engine, SH_MEMBER(this, &SourceModBase::GetMapEntitiesString), false);
+#endif
 
 	/* Only load if we're not late */
 	if (!late)
@@ -292,8 +310,10 @@ bool SourceModBase::InitializeSourceMod(char *error, size_t maxlength, bool late
 
 void SourceModBase::StartSourceMod(bool late)
 {
+#ifndef SOURCE2_WIP
 	SH_ADD_HOOK(IServerGameDLL, LevelShutdown, gamedll, SH_MEMBER(this, &SourceModBase::LevelShutdown), false);
 	SH_ADD_HOOK(IServerGameDLL, GameFrame, gamedll, SH_MEMBER(&g_Timers, &TimerSystem::GameFrame), false);
+#endif
 
 	enginePatch = SH_GET_CALLCLASS(engine);
 	gamedllPatch = SH_GET_CALLCLASS(gamedll);
@@ -365,16 +385,21 @@ void SourceModBase::StartSourceMod(bool late)
 		g_pSourcePawn2->InstallWatchdogTimer(atoi(timeout) * 1000);
 	}
 
+#ifndef SOURCE2_WIP
 	SH_ADD_HOOK(IServerGameDLL, Think, gamedll, SH_MEMBER(logicore.callbacks, &IProviderCallbacks::OnThink), false);
+#endif
 }
 
+#ifndef SOURCE2_WIP
 static bool g_LevelEndBarrier = false;
 bool SourceModBase::LevelInit(char const *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background)
 {
 	/* Seed rand() globally per map */
 	srand(time(NULL));
 	
+#ifndef SOURCE2_WIP
 	g_Players.MaxPlayersChanged();
+#endif
 
 	/* If we're not loaded... */
 	if (!g_Loaded)
@@ -474,6 +499,7 @@ void SourceModBase::LevelShutdown()
 		m_ExecPluginReload = false;
 	}
 }
+#endif
 
 bool SourceModBase::IsMapLoading() const
 {
@@ -557,13 +583,17 @@ void SourceModBase::CloseSourceMod()
 	if (!sSourceModInitialized)
 		return;
 
+#ifndef SOURCE2_WIP
 	SH_REMOVE_HOOK(IServerGameDLL, LevelInit, gamedll, SH_MEMBER(this, &SourceModBase::LevelInit), false);
 	SH_REMOVE_HOOK(IVEngineServer, GetMapEntitiesString, engine, SH_MEMBER(this, &SourceModBase::GetMapEntitiesString), false);
+#endif
 
 	if (g_Loaded)
 	{
 		/* Force a level end */
+#ifndef SOURCE2_WIP
 		LevelShutdown();
+#endif
 		ShutdownServices();
 	}
 
@@ -622,9 +652,11 @@ void SourceModBase::ShutdownServices()
 		gamedllPatch = NULL;
 	}
 
+#ifndef SOURCE2_WIP
 	SH_REMOVE_HOOK(IServerGameDLL, LevelShutdown, gamedll, SH_MEMBER(this, &SourceModBase::LevelShutdown), false);
 	SH_REMOVE_HOOK(IServerGameDLL, GameFrame, gamedll, SH_MEMBER(&g_Timers, &TimerSystem::GameFrame), false);
 	SH_REMOVE_HOOK(IServerGameDLL, Think, gamedll, SH_MEMBER(logicore.callbacks, &IProviderCallbacks::OnThink), false);
+#endif
 }
 
 void SourceModBase::LogMessage(IExtension *pExt, const char *format, ...)
@@ -745,7 +777,11 @@ void SourceModBase::AllPluginsLoaded()
 
 time_t SourceModBase::GetAdjustedTime()
 {
+#ifndef SOURCE2_WIP
 	return ::GetAdjustedTime();
+#else
+	return time(NULL);
+#endif
 }
 
 void SourceModBase::AddGameFrameHook(GAME_FRAME_HOOK hook)
@@ -823,7 +859,11 @@ int SourceModBase::GetShApiVersion()
 
 bool SourceModBase::IsMapRunning()
 {
+#ifndef SOURCE2_WIP
 	return g_OnMapStarted;
+#else
+	return false;
+#endif
 }
 
 void *SourceModBase::FromPseudoAddress(uint32_t pseudoAddr)
@@ -837,7 +877,9 @@ uint32_t SourceModBase::ToPseudoAddress(void *addr)
 }
 
 class ConVarRegistrar :
+#ifndef SOURCE2_WIP
 	public IConCommandBaseAccessor,
+#endif
 	public SMGlobalClass
 {
 public:
@@ -849,6 +891,7 @@ public:
 		CONVAR_REGISTER(this);
 	}
 
+#ifndef SOURCE2_WIP
 	bool RegisterConCommandBase(ConCommandBase *pCommand) override
 	{
 		META_REGCVAR(pCommand);
@@ -861,4 +904,5 @@ public:
 
 		return true;
 	}
+#endif
 } sConVarRegistrar;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This should be run inside a folder that contains sourcemod, otherwise, it will checkout things into "sm-dependencies".
+# This should be run inside a folder that contains source2mod, otherwise, it will checkout things into "sm-dependencies".
 
 trap "exit" INT
 
@@ -43,9 +43,9 @@ getmysql ()
 {
   if [ ! -d $mysqlfolder ]; then
     if [ `command -v wget` ]; then
-      wget $mysqlurl -O $mysqlfolder.$archive_ext
+      wget $mysqlurl -O $mysqlfolder.$archive_ext > /dev/null
     elif [ `command -v curl` ]; then
-      curl -o $mysqlfolder.$archive_ext $mysqlurl
+      curl -S -s -o $mysqlfolder.$archive_ext $mysqlurl
     else
       echo "Failed to locate wget or curl. Install one of these programs to download MySQL."
       exit 1
@@ -55,24 +55,6 @@ getmysql ()
     rm $mysqlfolder.$archive_ext
   fi
 }
-
-# 32-bit MySQL
-mysqlfolder=mysql-5.5
-if [ $ismac -eq 1 ]; then
-  mysqlver=mysql-5.5.28-osx10.5-x86
-  mysqlurl=https://cdn.mysql.com/archives/mysql-5.5/$mysqlver.$archive_ext
-elif [ $iswin -eq 1 ]; then
-  mysqlver=mysql-5.5.54-win32
-  mysqlurl=https://cdn.mysql.com/archives/mysql-5.5/$mysqlver.$archive_ext
-  # The folder in the zip archive does not contain the substring "-noinstall", so strip it
-  mysqlver=${mysqlver/-noinstall}
-else
-  mysqlver=mysql-5.6.15-linux-glibc2.5-i686
-  mysqlurl=https://cdn.mysql.com/archives/mysql-5.6/$mysqlver.$archive_ext
-fi
-if [ $download_mysql -eq 1 ]; then
-  getmysql
-fi
 
 # 64-bit MySQL
 mysqlfolder=mysql-5.5-x86_64
@@ -113,24 +95,14 @@ checkout ()
   fi
 }
 
-name=mmsource-1.12
+name=mmsource-2.0
 branch=master
 repo="https://github.com/alliedmodders/metamod-source"
 origin=
 checkout
 
 if [ -z ${sdks+x} ]; then
-  sdks=( csgo hl2dm nucleardawn l4d2 dods l4d css tf2 insurgency sdk2013 doi )
-
-  if [ $ismac -eq 0 ]; then
-    # Add these SDKs for Windows or Linux
-    sdks+=( orangebox blade episode1 bms pvkii )
-
-    # Add more SDKs for Windows only
-    if [ $iswin -eq 1 ]; then
-      sdks+=( darkm swarm bgt eye contagion )
-    fi
-  fi
+  sdks=( cs2 )
 fi
 
 # Check out a local copy as a proxy.
@@ -163,7 +135,7 @@ fi
 
 $python_cmd -c "import ambuild2" 2>&1 1>/dev/null
 if [ $? -eq 1 ]; then
-  echo "AMBuild is required to build SourceMod"
+  echo "AMBuild is required to build Source2Mod"
 
   $python_cmd -m pip --version 2>&1 1>/dev/null
   if [ $? -eq 1 ]; then

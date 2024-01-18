@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "BinTools Extension"
-            VALUE "FileDescription", "SourceMod BinTools Extension"
+            VALUE "FileDescription", "Source2Mod BinTools Extension"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "SourceMod BinTools Extension"
+            VALUE "InternalName", "Source2Mod BinTools Extension"
             VALUE "LegalCopyright", "Copyright (c) 2004-2008, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod BinTools Extension"
+            VALUE "ProductName", "Source2Mod BinTools Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

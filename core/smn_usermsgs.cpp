@@ -269,7 +269,7 @@ size_t MsgListenerWrapper::_FillInPlayers(int *pl_array, IRecipientFilter *pFilt
 
 	for (size_t i=0; i<size; i++)
 	{
-		pl_array[i] = pFilter->GetRecipientIndex(i);
+		pl_array[i] = pFilter->GetRecipientIndex(i).Get();
 	}
 
 	return size;

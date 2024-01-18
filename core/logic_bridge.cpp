@@ -36,13 +36,25 @@
 #include "sm_autonatives.h"
 #include "sm_stringutil.h"
 #include "Logger.h"
-#include "TimerSys.h"
 #include "logic_bridge.h"
+#include "CoreConfig.h"
+
+#ifndef SOURCE2_WIP
+
+#include "TimerSys.h"
 #include "PlayerManager.h"
 #include "HalfLife2.h"
 #include "MenuManager.h"
-#include "CoreConfig.h"
 #include "ConCmdManager.h"
+
+#else
+
+#define SOURCE_BIN_PREFIX ""
+#define SOURCE_BIN_SUFFIX ""
+#define SOURCE_BIN_EXT ".dll"
+
+#endif
+
 #include "IDBDriver.h"
 #include "provider.h"
 #include "sm_convar.h"
@@ -75,7 +87,9 @@ public:
 	}
 	virtual void InsertServerCommand(const char *cmd)
 	{
+#ifndef SOURCE2_WIP
 		engine->InsertServerCommand(cmd);
+#endif
 	}
 	virtual void ServerCommand(const char *cmd)
 	{
@@ -83,7 +97,9 @@ public:
 	}
 	virtual void ServerExecute()
 	{
+#ifndef SOURCE2_WIP
 		engine->ServerExecute();
+#endif
 	}
 	virtual const char *GetClientConVarValue(int clientIndex, const char *name)
 	{
@@ -91,11 +107,15 @@ public:
 	}
 	virtual void ClientCommand(edict_t *pEdict, const char *szCommand)
 	{
+#ifndef SOURCE2_WIP
 		engine->ClientCommand(pEdict, "%s", szCommand);
+#endif
 	}
 	virtual void FakeClientCommand(edict_t *pEdict, const char *szCommand)
 	{
+#ifndef SOURCE2_WIP
 		serverpluginhelpers->ClientCommand(pEdict, szCommand);
+#endif
 	}
 } engine_wrapper;
 
@@ -188,7 +208,11 @@ public:
 	}
 	int GetSearchPath(const char* pathID, bool bGetPackFiles, char* pPath, int nMaxLen) override
 	{
+#ifndef SOURCE2_WIP
 		return filesystem->GetSearchPath(pathID, bGetPackFiles, pPath, nMaxLen);
+#else
+		return 0;
+#endif
 	}
 } fs_wrapper;
 
@@ -261,9 +285,11 @@ public:
 	}
 } playerinfo_wrapper;
 
-static ConVar sm_show_activity("sm_show_activity", "13", FCVAR_SPONLY, "Activity display setting (see sourcemod.cfg)");
+#ifndef SOURCE2_WIP
+static ConVar sm_show_activity("sm_show_activity", "13", FCVAR_SPONLY, "Activity display setting (see source2mod.cfg)");
 static ConVar sm_immunity_mode("sm_immunity_mode", "1", FCVAR_SPONLY, "Mode for deciding immunity protection");
 static ConVar sm_datetime_format("sm_datetime_format", "%m/%d/%Y - %H:%M:%S", 0, "Default formatting time rules");
+#endif
 
 static const char* get_core_config_value(const char* key)
 {
@@ -283,22 +309,36 @@ static void keyvalues_to_dbinfo(KeyValues *kv, DatabaseInfo *out)
 
 static int get_activity_flags()
 {
+#ifndef SOURCE2_WIP
 	return sm_show_activity.GetInt();
+#else
+	return 13;
+#endif
 }
 
 static int get_immunity_mode()
 {
+#ifndef SOURCE2_WIP
 	return sm_immunity_mode.GetInt();
+#else
+	return 1;
+#endif
 }
 
 static void update_admin_cmd_flags(const char *cmd, OverrideType type, FlagBits bits, bool remove)
 {
+#ifndef SOURCE2_WIP
 	g_ConCmds.UpdateAdminCmdFlags(cmd, type, bits, remove);
+#endif
 }
 
 static bool look_for_cmd_admin_flags(const char *cmd, FlagBits *pFlags)
 {
+#ifndef SOURCE2_WIP
 	return g_ConCmds.LookForCommandAdminFlags(cmd, pFlags);
+#else
+	return false;
+#endif
 }
 
 void do_global_plugin_loads()
@@ -395,10 +435,14 @@ CoreProviderImpl::CoreProviderImpl()
 	this->engine = &engine_wrapper;
 	this->filesystem = &fs_wrapper;
 	this->playerInfo = &playerinfo_wrapper;
+
+#ifndef SOURCE2_WIP
 	this->timersys = &g_Timers;
 	this->playerhelpers = &g_Players;
 	this->gamehelpers = &g_HL2;
 	this->menus = &g_Menus;
+#endif
+
 	this->spe1 = &g_pSourcePawn;
 	this->spe2 = &g_pSourcePawn2;
 	this->GetCoreConfigValue = get_core_config_value;
@@ -418,23 +462,36 @@ CoreProviderImpl::CoreProviderImpl()
 
 ConVar *CoreProviderImpl::FindConVar(const char *name)
 {
+#ifndef SOURCE2_WIP
 	return icvar->FindVar(name);
+#else
+	return nullptr;
+#endif
 }
 
 const char *CoreProviderImpl::GetCvarString(ConVar* cvar)
 {
+#ifndef SOURCE2_WIP
 	return cvar->GetString();
+#else
+	return "";
+#endif
 }
 
 bool CoreProviderImpl::GetCvarBool(ConVar* cvar)
 {
+#ifndef SOURCE2_WIP
 	return cvar->GetBool();
+#else
+	return false;
+#endif
 }
 
 bool CoreProviderImpl::GetGameName(char *buffer, size_t maxlength)
 {
+#ifndef SOURCE2_WIP
 	KeyValues *pGameInfo = new KeyValues("GameInfo");
-	if (g_HL2.KVLoadFromFile(pGameInfo, basefilesystem, "gameinfo.txt"))
+	if (g_HL2.KVLoadFromFile(pGameInfo, filesystem, "gameinfo.txt"))
 	{
 		const char *str;
 		if ((str = pGameInfo->GetString("game", NULL)) != NULL)
@@ -446,11 +503,19 @@ bool CoreProviderImpl::GetGameName(char *buffer, size_t maxlength)
 	}
 	pGameInfo->deleteThis();
 	return false;
+#else
+	ke::SafeStrcpy(buffer, maxlength, "csgo");
+	return true;
+#endif
 }
 
 const char *CoreProviderImpl::GetGameDescription()
 {
+#ifndef SOURCE2_WIP
 	return SERVER_CALL(GetGameDescription)();
+#else
+	return "csgo";
+#endif
 }
 
 const char *CoreProviderImpl::GetSourceEngineName()
@@ -506,6 +571,8 @@ const char *CoreProviderImpl::GetSourceEngineName()
 	return "pvkii";
 #elif SOURCE_ENGINE == SE_MCV
 	return "mcv";
+#elif SOURCE_ENGINE == SE_CS2
+	return "cs2";
 #endif
 }
 
@@ -567,11 +634,16 @@ bool CoreProviderImpl::IsMapRunning()
 
 int CoreProviderImpl::MaxClients()
 {
+#ifndef SOURCE2_WIP
 	return g_Players.MaxClients();
+#else
+	return 64;
+#endif
 }
 
 bool CoreProviderImpl::DescribePlayer(int index, const char **namep, const char **authp, int *useridp)
 {
+#ifndef SOURCE2_WIP
 	CPlayer *player = g_Players.GetPlayerByIndex(index);
 	if (!player || !player->IsConnected())
 		return false;
@@ -584,6 +656,7 @@ bool CoreProviderImpl::DescribePlayer(int index, const char **namep, const char 
 	}
 	if (useridp)
 		*useridp = ::engine->GetPlayerUserId(player->GetEdict());
+#endif
 	return true;
 }
 
@@ -614,12 +687,16 @@ void CoreProviderImpl::UnloadMMSPlugin(int id)
 
 bool CoreProviderImpl::IsClientConVarQueryingSupported()
 {
+#ifndef SOURCE2_WIP
 	return hooks_.GetClientCvarQueryMode() != ClientCvarQueryMode::Unavailable;
+#else
+	return false;
+#endif
 }
 
 int CoreProviderImpl::QueryClientConVar(int client, const char *cvar)
 {
-#if SOURCE_ENGINE != SE_DARKMESSIAH
+#if SOURCE_ENGINE != SE_DARKMESSIAH && !defined SOURCE2_WIP
 	switch (hooks_.GetClientCvarQueryMode()) {
 	case ClientCvarQueryMode::DLL:
 		return ::engine->StartQueryCvarValue(PEntityOfEntIndex(client), cvar);
@@ -634,7 +711,9 @@ int CoreProviderImpl::QueryClientConVar(int client, const char *cvar)
 
 void CoreProviderImpl::InitializeBridge()
 {
+#ifndef SOURCE2_WIP
 	::serverGlobals.universalTime = g_pUniversalTime;
+#endif
 	::serverGlobals.frametime = &gpGlobals->frametime;
 	::serverGlobals.interval_per_tick = &gpGlobals->interval_per_tick;
 
@@ -668,7 +747,7 @@ bool CoreProviderImpl::LoadBridge(char *error, size_t maxlength)
 	/* Now it's time to load the logic binary */
 	g_SMAPI->PathFormat(file,
 		sizeof(file),
-		"%s/bin/" PLATFORM_ARCH_FOLDER "sourcemod.logic." PLATFORM_LIB_EXT,
+		"%s/bin/" PLATFORM_ARCH_FOLDER "source2mod.logic." PLATFORM_LIB_EXT,
 		g_SourceMod.GetSourceModPath());
 
 	char myerror[255];
@@ -696,33 +775,51 @@ bool CoreProviderImpl::LoadBridge(char *error, size_t maxlength)
 	return true;
 }
 
-ke::RefPtr<CommandHook>
-CoreProviderImpl::AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
+void CoreProviderImpl::AddCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
 {
-	return hooks_.AddCommandHook(cmd, callback);
+	hooks_.AddCommandHook(cmd, callback);
 }
 
-ke::RefPtr<CommandHook>
-CoreProviderImpl::AddPostCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
+#ifndef SOURCE2_WIP
+void CoreProviderImpl::AddPostCommandHook(ConCommand *cmd, const CommandHook::Callback &callback)
 {
-	return hooks_.AddPostCommandHook(cmd, callback);
+	hooks_.AddPostCommandHook(cmd, callback);
 }
+#endif
 
-CoreProviderImpl::CommandImpl::CommandImpl(ConCommand *cmd, CommandHook *hook)
-: cmd_(cmd),
-  hook_(hook)
+CoreProviderImpl::CommandImpl::CommandImpl(ConCommand *cmd)
+: cmd_(cmd)
 {
 }
 
 CoreProviderImpl::CommandImpl::~CommandImpl()
 {
-	hook_ = nullptr;
-
 	g_SMAPI->UnregisterConCommandBase(g_PLAPI, cmd_);
 	delete [] const_cast<char *>(cmd_->GetHelpText());
 	delete [] const_cast<char *>(cmd_->GetName());
 	delete cmd_;
 }
+
+class EngineArgs : public ICommandArgs
+{
+	const CCommand *cmd;
+public:
+	EngineArgs( const CCommand &_cmd ) : cmd( &_cmd )
+	{
+	}
+	const char *Arg( int n ) const
+	{
+		return cmd->Arg( n );
+	}
+	int ArgC() const
+	{
+		return cmd->ArgC();
+	}
+	const char *ArgS() const
+	{
+		return cmd->ArgS();
+	}
+};
 
 void
 CoreProviderImpl::DefineCommand(const char *name, const char *help, const CommandFunc &callback)
@@ -734,10 +831,11 @@ CoreProviderImpl::DefineCommand(const char *name, const char *help, const Comman
 	auto ignore_callback = [] (DISPATCH_ARGS) -> void {
 	};
 
-	ConCommand *cmd = new ConCommand(new_name, ignore_callback, new_help, flags);
-	ke::RefPtr<CommandHook> hook = AddCommandHook(cmd, callback);
+	ConCommandRefAbstract ref;
+	ConCommand *cmd = new ConCommand(&ref, new_name, ignore_callback, new_help, flags);
+	AddCommandHook(cmd, callback);
 
-	ke::RefPtr<CommandImpl> impl = new CommandImpl(cmd, hook);
+	ke::RefPtr<CommandImpl> impl = new CommandImpl(cmd);
 	commands_.push_back(impl);
 }
 
@@ -754,7 +852,9 @@ void CoreProviderImpl::InitializeHooks()
 
 void CoreProviderImpl::OnVSPReceived()
 {
+#ifndef SOURCE2_WIP
 	hooks_.OnVSPReceived();
+#endif
 }
 
 void CoreProviderImpl::ShutdownHooks()

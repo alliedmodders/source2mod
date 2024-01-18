@@ -81,13 +81,16 @@ extern IGameEventManager2 *gameevents;
 extern SourceHook::CallClass<IVEngineServer> *enginePatch;
 extern SourceHook::CallClass<IServerGameDLL> *gamedllPatch;
 extern IPlayerInfoManager *playerinfo;
-extern IBaseFileSystem *basefilesystem;
 extern IFileSystem *filesystem;
 extern IEngineSound *enginesound;
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 extern IServerTools *servertools;
 #endif
+
+#ifndef SOURCE2_WIP
 extern IServerPluginHelpers *serverpluginhelpers;
+#endif
+
 extern IServerPluginCallbacks *vsp_interface;
 extern int vsp_version;
 

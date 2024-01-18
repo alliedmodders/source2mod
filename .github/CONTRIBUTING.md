@@ -1,13 +1,13 @@
-# Contributing to SourceMod
+# Contributing to Source2Mod
 
 ## Issue reports
 
 Please consider the following guidelines when reporting an issue.
 
 #### Not for general support
-This is not the right place to get help with using or installing SourceMod, or for issues with specific, third-party SourceMod plugins or extensions.
+This is not the right place to get help with using or installing Source2Mod, or for issues with specific, third-party Source2Mod plugins or extensions.
 
-For help with SourceMod, please consult the [AlliedModders forums](https://forums.alliedmods.net/forumdisplay.php?f=52). Similarly, for assistance with, or to report issues with, third-party SourceMod plugins or extensions, you should post in the existing thread for that plugin or extension on the [AlliedModders forums](https://forums.alliedmods.net/forumdisplay.php?f=52).
+For help with Source2Mod, please consult the [AlliedModders forums](https://forums.alliedmods.net/forumdisplay.php?f=52). Similarly, for assistance with, or to report issues with, third-party Source2Mod plugins or extensions, you should post in the existing thread for that plugin or extension on the [AlliedModders forums](https://forums.alliedmods.net/forumdisplay.php?f=52).
 
 #### Details, details, details
 Provide as much detail as possible when reporting an issue.
@@ -17,7 +17,7 @@ For bugs or other undesired behavior, answers to the following questions are a g
 * What behavior are you expecting instead?
 * On what operating system is the game server running?
 * What game is the game server running?
-* What exact version (full x.y.z.a version number) of Metamod:Source and SourceMod are installed on the game server?
+* What exact version (full x.y.z.a version number) of Metamod:Source and Source2Mod are installed on the game server?
 * What is the specific, shortest path to reproducing this issue? If this issue can be reproduced with plugin code, please try to shorten it to the minimum required to trigger the problem.
  
 If this is a feature request, the following are helpful. Generally, not all will apply, but whatever you can answer ahead of time will shorten back and forth conversation.

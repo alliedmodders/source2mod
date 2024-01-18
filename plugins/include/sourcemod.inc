@@ -164,7 +164,7 @@ forward APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_ma
  * Called when the plugin is about to be unloaded.
  *
  * It is not necessary to close any handles or remove hooks in this function.
- * SourceMod guarantees that plugin shutdown automatically and correctly releases
+ * Source2Mod guarantees that plugin shutdown automatically and correctly releases
  * all resources.
  */
 forward void OnPluginEnd();
@@ -211,7 +211,7 @@ forward void OnConfigsExecuted();
 
 /**
  * This is called once, right after OnMapStart() but any time before
- * OnConfigsExecuted().  It is called after the "exec sourcemod.cfg"
+ * OnConfigsExecuted().  It is called after the "exec source2mod.cfg"
  * command and all AutoExecConfig() exec commands have been added to
  * the ServerCommand() buffer.
  *
@@ -488,9 +488,9 @@ native int GetSysTickCount();
  *                      information from the plugin's registered cvars.
  * @param name          Name of the config file, excluding the .cfg extension.
  *                      If empty, <plugin.filename.cfg> is assumed.
- * @param folder        Folder under cfg/ to use.  By default this is "sourcemod."
+ * @param folder        Folder under cfg/ to use.  By default this is "source2mod."
  */
-native void AutoExecConfig(bool autoCreate=true, const char[] name="", const char[] folder="sourcemod");
+native void AutoExecConfig(bool autoCreate=true, const char[] name="", const char[] folder="source2mod");
 
 /**
  * Registers a library name for identifying as a dependency to
@@ -556,15 +556,15 @@ forward void OnNotifyPluginUnloaded(Handle plugin);
 /**
  * Loads a map list to an ADT Array.
  *
- * A map list is a list of maps from a file.  SourceMod allows easy configuration of
- * maplists through addons/sourcemod/configs/maplists.cfg.  Each entry is given a
+ * A map list is a list of maps from a file.  Source2Mod allows easy configuration of
+ * maplists through addons/source2mod/configs/maplists.cfg.  Each entry is given a
  * name and a file (for example, "rtv" => "rtv.cfg"), or a name and a redirection
  * (for example, "rtv" => "default").  This native will read a map list entry,
  * cache the file, and return the list of maps it holds.
  *
  * Serial change numbers are used to identify if a map list has changed.  Thus, if
- * you pass a serial change number and it's equal to what SourceMod currently knows
- * about the map list, then SourceMod won't re-parse the file.
+ * you pass a serial change number and it's equal to what Source2Mod currently knows
+ * about the map list, then Source2Mod won't re-parse the file.
  *
  * If the maps end up being read from the maps folder (MAPLIST_FLAG_MAPSFOLDER), they
  * are automatically sorted in alphabetical, ascending order.
@@ -586,7 +586,7 @@ forward void OnNotifyPluginUnloaded(Handle plugin);
  * @param str           Config name, or "default" for the default map list.  Config names
  *                      should be somewhat descriptive.  For example, the admin menu uses
  *                      a config name of "admin menu".  The list names can be configured
- *                      by users in addons/sourcemod/configs/maplists.cfg.
+ *                      by users in addons/source2mod/configs/maplists.cfg.
  * @param flags         MAPLIST_FLAG flags.
  * @return              On failure:
  *                      INVALID_HANDLE is returned, the serial is set to -1, and the input
@@ -656,7 +656,7 @@ enum FeatureType
 	 * native, because the underlying functionality could be enabled on-demand
 	 * to improve loading time. Thus a native may appear to exist, but it might
 	 * be part of a set of features that are not compatible with the current game
-	 * or version of SourceMod.
+	 * or version of Source2Mod.
 	 */
 	FeatureType_Capability
 };
@@ -684,7 +684,7 @@ enum FeatureStatus
 
 /**
  * Returns whether "GetFeatureStatus" will work. Using this native
- * or this function will not cause SourceMod to fail loading on older versions,
+ * or this function will not cause Source2Mod to fail loading on older versions,
  * however, GetFeatureStatus will only work if this function returns true.
  *
  * @return              True if GetFeatureStatus will work, false otherwise.
@@ -748,7 +748,7 @@ native any LoadFromAddress(Address addr, NumberType size);
  * @param data                     Value to store at the address.
  * @param size                     How many bytes should be written.
  *                                 If storing a floating-point value, use NumberType_Int32.
- * @param updateMemAccess          If true, SourceMod will set read / write / exec permissions
+ * @param updateMemAccess          If true, Source2Mod will set read / write / exec permissions
  *                                 on the memory page being written to.
  * @error                          Address is null or pointing to reserved memory.
  */

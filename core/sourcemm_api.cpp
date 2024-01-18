@@ -51,19 +51,24 @@ IGameEventManager2 *gameevents = NULL;
 CallClass<IVEngineServer> *enginePatch = NULL;
 CallClass<IServerGameDLL> *gamedllPatch = NULL;
 IPlayerInfoManager *playerinfo = NULL;
-IBaseFileSystem *basefilesystem = NULL;
 IFileSystem *filesystem = NULL;
 IEngineSound *enginesound = NULL;
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 IServerTools *servertools = NULL;
 #endif
+
+#ifndef SOURCE2_WIP
 IServerPluginHelpers *serverpluginhelpers = NULL;
+#endif
+
 IServerPluginCallbacks *vsp_interface = NULL;
 int vsp_version = 0;
 
 PLUGIN_EXPOSE(SourceMod, g_SourceMod_Core);
 
+#ifndef SOURCE2_WIP
 ConVar sourcemod_version("sourcemod_version", SOURCEMOD_VERSION, FCVAR_SPONLY|FCVAR_NOTIFY, "SourceMod Version");
+#endif
 
 bool SourceMod_Core::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
@@ -94,17 +99,22 @@ bool SourceMod_Core::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen
 #endif
 	GET_V_IFACE_CURRENT(GetServerFactory, serverClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
 	GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
+#ifndef SOURCE2_WIP
 	GET_V_IFACE_CURRENT(GetEngineFactory, gameevents, IGameEventManager2, INTERFACEVERSION_GAMEEVENTSMANAGER2);
-	GET_V_IFACE_CURRENT(GetFileSystemFactory, basefilesystem, IBaseFileSystem, BASEFILESYSTEM_INTERFACE_VERSION);
+#endif
 	GET_V_IFACE_CURRENT(GetFileSystemFactory, filesystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
+
+#ifndef SOURCE2_WIP
 	GET_V_IFACE_CURRENT(GetEngineFactory, enginesound, IEngineSound, IENGINESOUND_SERVER_INTERFACE_VERSION);
 #if SOURCE_ENGINE >= SE_ORANGEBOX
 	GET_V_IFACE_CURRENT(GetServerFactory, servertools, IServerTools, VSERVERTOOLS_INTERFACE_VERSION);
 #endif
+
 	GET_V_IFACE_CURRENT(GetEngineFactory, serverpluginhelpers, IServerPluginHelpers, INTERFACEVERSION_ISERVERPLUGINHELPERS);
 
 	/* :TODO: Make this optional and... make it find earlier versions [?] */
 	GET_V_IFACE_CURRENT(GetServerFactory, playerinfo, IPlayerInfoManager, INTERFACEVERSION_PLAYERINFOMANAGER);
+#endif
 
 	if ((g_pMMPlugins = (ISmmPluginManager *)g_SMAPI->MetaFactory(MMIFACE_PLMANAGER, NULL, NULL)) == NULL)
 	{
@@ -119,10 +129,12 @@ bool SourceMod_Core::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen
 	
 	ismm->AddListener(this, this);
 
+#ifndef SOURCE2_WIP
 	if ((vsp_interface = g_SMAPI->GetVSPInfo(&vsp_version)) == NULL)
 	{
 		g_SMAPI->EnableVSPListener();
 	}
+#endif
 
 	return g_SourceMod.InitializeSourceMod(error, maxlen, late);
 }

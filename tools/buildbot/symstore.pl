@@ -38,14 +38,14 @@ while (<PDBLOG>)
 	$line = $_;
 	$line =~ s/\.pdb/\*/;
 	chomp $line;
-	Build::Command("symstore add /r /f \"..\\OUTPUT\\$line\" /s \"S:\\sourcemod\" /t \"SourceMod\" /v \"$version\" /c \"$build_type\"");
+	Build::Command("symstore add /r /f \"..\\OUTPUT\\$line\" /s \"S:\\source2mod\" /t \"Source2Mod\" /v \"$version\" /c \"$build_type\"");
 }
 
 close(PDBLOG);
 
 #Lowercase DLLs.  Sigh.
 my (@files);
-opendir(DIR, "S:\\sourcemod") or die "Could not open sourcemod symbol folder: $!\n";
+opendir(DIR, "S:\\source2mod") or die "Could not open source2mod symbol folder: $!\n";
 @files = readdir(DIR);
 closedir(DIR);
 
@@ -54,14 +54,14 @@ for ($i = 0; $i <= $#files; $i++)
 {
 	$file = $files[$i];
 	next unless ($file =~ /\.dll$/);
-	next unless (-d "S:\\sourcemod\\$file");
-	opendir(DIR, "S:\\sourcemod\\$file") or die "Could not open S:\\sourcemod\\$file: $!\n";
+	next unless (-d "S:\\source2mod\\$file");
+	opendir(DIR, "S:\\source2mod\\$file") or die "Could not open S:\\source2mod\\$file: $!\n";
 	@subdirs = readdir(DIR);
 	closedir(DIR);
 	for ($j = 0; $j <= $#subdirs; $j++)
 	{
 		next unless ($subdirs[$j] =~ /[A-Z]/);
-		Build::Command("rename S:\\sourcemod\\$file\\" . $subdirs[$j] . " " . lc($subdirs[$j]));
+		Build::Command("rename S:\\source2mod\\$file\\" . $subdirs[$j] . " " . lc($subdirs[$j]));
 	}	
 }
 

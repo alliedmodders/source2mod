@@ -13,7 +13,7 @@ argv = [
   os.path.join(builder.buildPath, 'includes'),
 ]
 outputs = [
-  os.path.join(builder.buildFolder, 'includes', 'sourcemod_version_auto.h'),
+  os.path.join(builder.buildFolder, 'includes', 'source2mod_version_auto.h'),
   os.path.join(builder.buildFolder, 'includes', 'version_auto.inc'),
 ]
 

@@ -533,7 +533,11 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			/* Parse the offset... */
 			if (!m_Class.empty() && !m_Prop.empty())
 			{
+#ifndef SOURCE2_WIP
 				SendProp *pProp = gamehelpers->FindInSendTable(m_Class.c_str(), m_Prop.c_str());
+#else
+				SendProp *pProp = nullptr;
+#endif
 				if (pProp)
 				{
 					int val = gamehelpers->GetSendPropOffset(pProp);

@@ -226,7 +226,7 @@ private:
 
 struct ValveDirectory
 {
-	FileFindHandle_t hndl = -1;
+	FileFindHandle_t hndl;
 	char szFirstPath[PLATFORM_MAX_PATH];
 	bool bHandledFirstPath;
 };

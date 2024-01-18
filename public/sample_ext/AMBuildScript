@@ -105,14 +105,12 @@ class ExtensionConfig(object):
     if builder.options.sm_path:
       self.sm_root = builder.options.sm_path
     else:
-      self.sm_root = ResolveEnvPath('SOURCEMOD18', 'sourcemod-1.8')
+      self.sm_root = ResolveEnvPath('SOURCE2MOD', 'source2mod')
       if not self.sm_root:
-        self.sm_root = ResolveEnvPath('SOURCEMOD', 'sourcemod')
-      if not self.sm_root:
-        self.sm_root = ResolveEnvPath('SOURCEMOD_DEV', 'sourcemod-central')
+        self.sm_root = ResolveEnvPath('SOURCE2MOD_DEV', 'source2mod-central')
 
     if not self.sm_root or not os.path.isdir(self.sm_root):
-      raise Exception('Could not find a source copy of SourceMod')
+      raise Exception('Could not find a source copy of Source2Mod')
     self.sm_root = Normalize(self.sm_root)
 
     if builder.options.mms_path:

@@ -3,14 +3,14 @@ import os.path
 
 for cxx in builder.targets:
   if cxx.target.platform in ['windows', 'mac']:
-    name = 'sourcemod_mm'
+    name = 'source2mod_mm'
     extra_ldflags = []
   elif cxx.target.platform == 'linux':
-    name = 'sourcemod_mm_i486'
+    name = 'source2mod_mm_i486'
     extra_ldflags = ['-ldl']
 
   if cxx.target.arch == 'x86_64':
-    name = 'sourcemod_mm.x64'
+    name = 'source2mod_mm.x64'
 
   binary = SM.Library(builder, cxx, name)
   binary.compiler.cxxincludes += [

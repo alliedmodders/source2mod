@@ -45,13 +45,13 @@ BEGIN
     BEGIN
         BLOCK "000004b0"
         BEGIN
-            VALUE "Comments", "SourceMod"
-            VALUE "FileDescription", "SourceMod Core Logic"
+            VALUE "Comments", "Source2Mod"
+            VALUE "FileDescription", "Source2Mod Core Logic"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "sourcemod"
+            VALUE "InternalName", "source2mod"
             VALUE "LegalCopyright", "Copyright (c) 2004-2009, AlliedModders LLC"
-            VALUE "OriginalFilename", "sourcemod.logic.dll"
-            VALUE "ProductName", "SourceMod"
+            VALUE "OriginalFilename", "source2mod.logic.dll"
+            VALUE "ProductName", "Source2Mod"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END

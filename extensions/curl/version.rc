@@ -46,12 +46,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "Webternet Extension"
-            VALUE "FileDescription", "SourceMod Webternet Extension"
+            VALUE "FileDescription", "Source2Mod Webternet Extension"
             VALUE "FileVersion", SM_VERSION_STRING
-            VALUE "InternalName", "SourceMod Webternet Extension"
+            VALUE "InternalName", "Source2Mod Webternet Extension"
             VALUE "LegalCopyright", "Copyright (c) 2004-2009, AlliedModders LLC"
             VALUE "OriginalFilename", BINARY_NAME
-            VALUE "ProductName", "SourceMod Webternet Extension"
+            VALUE "ProductName", "Source2Mod Webternet Extension"
             VALUE "ProductVersion", SM_VERSION_STRING
         END
     END
